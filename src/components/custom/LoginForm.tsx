@@ -34,7 +34,7 @@ export function LoginForm() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-3">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
                             <FormField
                                 control={form.control}
                                 name="userId"
@@ -44,7 +44,7 @@ export function LoginForm() {
                                         <FormControl>
                                             <Input className="w-full h-[40px] border-white hover:shadow-blue-400" placeholder="Enter User ID" {...field} />
                                         </FormControl>
-                                        <FormMessage className="absolute bottom-[-8px] text-[12px]" />
+                                        <FormMessage className="absolute bottom-[-18px] text-[12px]" />
                                     </FormItem>
                                 )}
                             />
@@ -61,7 +61,7 @@ export function LoginForm() {
                                             isShowPassord ? <Eye fill="#dfe6f6" stroke="#2b7fff" onClick={() => hidePassword(!isShowPassord)} size={25} className="absolute right-[5px] top-[36px] w-[25px] h-[25px] cursor-pointer" /> : <EyeOff fill="#dfe6f6" stroke="#2b7fff" onClick={() => hidePassword(!isShowPassord)} size={25} className="absolute right-[5px] top-[36px] w-[25px] h-[25px] cursor-pointer" />
                                         }
 
-                                        <FormMessage className="absolute bottom-[-8px] text-[12px]" />
+                                        <FormMessage className="absolute bottom-[-18px] text-[12px]" />
                                     </FormItem>
                                 )}
                             />
