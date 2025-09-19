@@ -25,7 +25,7 @@ export function LoginForm() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center w-full min-h-screen bg-linear-to-b from-[#c0cce8] from-65% to-white  relative">
+        <div className="flex flex-col items-center justify-center w-full h-screen  overflow-hidden bg-linear-to-b from-[#c0cce8] from-65% to-white  relative">
             <img src="assets/images/img1.png" className="absolute w-[260px] left-[2%] bottom-[2%]" />
             <img src="assets/images/img2.png" className="absolute w-[350px] right-[2%] top-[2%]" />
             <Card className="w-[330px] rounded-sm relative z-10 bg-[#dfe6f6] border-white">
