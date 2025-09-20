@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schema/LoginSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
@@ -72,7 +74,12 @@ export function LoginForm() {
                             />
                             {/* isShowPassord, hidePassword */}
                             <div className="text-[12px] text-right text-slate-600">Having trouble in login <Link className="text-blue-500" to="/" >Click here</Link></div>
-
+                            <div className="mt-2">
+                                <div className="flex items-center gap-3">
+                                    <Checkbox id="terms" />
+                                    <Label htmlFor="terms">Accept terms and conditions</Label>
+                                </div>
+                            </div>
                             <Button className="h-[40px] cursor-pointer">Authenticate <ArrowRight /></Button>
                         </form>
                     </Form>
