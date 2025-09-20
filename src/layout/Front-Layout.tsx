@@ -1,7 +1,10 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
 export default function FrontLayout() {
     return (
-        <Outlet />
+        <>
+            <Link to="/dashboard">Dashboard</Link>
+            <Outlet />
+        </>
     )
 }
