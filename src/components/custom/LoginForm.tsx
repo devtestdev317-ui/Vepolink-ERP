@@ -11,7 +11,9 @@ import { LoginSchema } from "@/schema/LoginSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from "react";
+import useMediaQuery from "@/hooks/useMediaQuery";
 export function LoginForm() {
+    const isMobile = useMediaQuery('(max-width: 768px)');
     const [isShowPassord, hidePassword] = useState(true)
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
@@ -26,8 +28,11 @@ export function LoginForm() {
 
     return (
         <div className="flex flex-col items-center justify-center w-full h-screen  overflow-hidden bg-linear-to-b from-[#c0cce8] from-65% to-white  relative">
-            <img src="assets/images/img1.png" className="absolute w-[260px] left-[2%] bottom-[2%]" />
-            <img src="assets/images/img2.png" className="absolute w-[350px] right-[2%] top-[2%]" />
+            {
+                !isMobile ? <> <img src="assets/images/img1.png" className="absolute w-[260px] left-[2%] bottom-[2%]" />
+                    <img src="assets/images/img2.png" className="absolute w-[350px] right-[2%] top-[2%]" /></> : null
+            }
+
             <Card className="w-[330px] rounded-sm relative z-10 bg-[#dfe6f6] border-white">
                 <CardHeader className="flex flex-col items-center gap-3">
                     <img src="assets/images/logo.png" className="w-[130px]" />
@@ -71,7 +76,7 @@ export function LoginForm() {
                             <Button className="h-[40px] cursor-pointer">Authenticate <ArrowRight /></Button>
                         </form>
                     </Form>
-                    
+
                 </CardContent>
             </Card>
         </div>
