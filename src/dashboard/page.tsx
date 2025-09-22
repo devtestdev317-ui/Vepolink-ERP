@@ -11,7 +11,6 @@ import {
     Calendar,
     Phone,
     Settings,
-    User,
     CreditCard,
     BarChart3,
     Users,
