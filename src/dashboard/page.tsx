@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
-
+import { Badge } from "@/components/ui/badge";
 interface SectionProps {
     id: string
     title: string;
@@ -307,7 +307,9 @@ export default function DashboardPage() {
 function Section({ id, title, subnavItems }: SectionProps) {
     return (
         <div key={id} className="px-2 py-2.5 flex-1 min-w-[280px] bg-gray-50 border-none rounded shadow-none transition-shadow h-full min-h-[calc(100vh-100px)]">
-            <h2 className="text-[14px] text-black/80 font-semibold mb-2 whitespace-nowrap overflow-hidden text-ellipsis ">{title}</h2>
+            <h2 className="text-[14px] text-black/80 font-semibold mb-2 whitespace-nowrap overflow-hidden text-ellipsis ">{title}<Badge className="h-5 bg-gray-200 text-gray-600 font-semibold rounded-[5px] ml-1.5 min-w-[30px] px-1 font-mono tabular-nums">
+                {subnavItems ? subnavItems.length : 0}
+            </Badge></h2>
             <Separator className="my-3" />
             <Subnav items={subnavItems} />
         </div>
