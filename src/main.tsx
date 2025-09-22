@@ -5,7 +5,7 @@ import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import FrontLayout from './layout/Front-Layout.tsx';
 import DashboardLayout from './layout/Dashboard-layout.tsx';
-import Dashboard from '@/dashboard/Dashboard.tsx';
+import Dashboard from './dashboard/page.tsx';
 import RouteError from './components/RouteError.tsx';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
 import { store } from './App/store.ts';
