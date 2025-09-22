@@ -1,7 +1,4 @@
 import { Outlet } from "react-router-dom";
-
-import { AppSidebar } from "@/components/custom/app-sidebar";
-import { SiteHeader } from "@/components/custom/site-header";
 import {
     SidebarInset,
     SidebarProvider,
@@ -16,9 +13,7 @@ export default function DashboardLayout() {
                 } as React.CSSProperties
             }
         >
-            <AppSidebar variant="inset" collapsible="icon" />
             <SidebarInset>
-                <SiteHeader />
                 <div className="flex flex-1 flex-col">
                     <div className="@container/main flex flex-1 flex-col gap-2">
                         <div className="flex flex-col gap-4 p-4 md:gap-6 md:py-6">

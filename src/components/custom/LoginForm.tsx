@@ -14,7 +14,10 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import { useGetAllProductsQuery } from "@/App/service/Api";
 export function LoginForm() {
+    const res = useGetAllProductsQuery({});
+    console.log(res)
     const isMobile = useMediaQuery('(max-width: 768px)');
     const [isShowPassord, hidePassword] = useState(true)
     const form = useForm<z.infer<typeof LoginSchema>>({

@@ -8,7 +8,8 @@ import DashboardLayout from './layout/Dashboard-layout.tsx';
 import Dashboard from '@/dashboard/Dashboard.tsx';
 import RouteError from './components/RouteError.tsx';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
-
+import { store } from './App/store.ts';
+import { Provider } from "react-redux"
 
 const Routes = createBrowserRouter([
   {
@@ -42,8 +43,11 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <ErrorBoundary>
-      <RouterProvider router={Routes} />
-    </ErrorBoundary>
+    <Provider store={store}>
+      <ErrorBoundary>
+        <RouterProvider router={Routes} />
+      </ErrorBoundary>
+
+    </Provider>
   </StrictMode>,
 )

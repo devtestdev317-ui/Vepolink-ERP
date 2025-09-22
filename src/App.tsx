@@ -1,9 +1,9 @@
 import { LoginForm } from "./components/custom/LoginForm"
-
-
 function App() {
   return (
-    <LoginForm />
+    <>
+      <LoginForm />
+    </>
   )
 }
 
