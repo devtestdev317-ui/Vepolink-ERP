@@ -54,7 +54,7 @@ export default function DashboardPage() {
             title: 'Pre-sales/Leads',
             description: 'Get a quick overview of your dashboard.',
             subnavItems: [
-                { id: '1', title: 'Overview', href: '/dashboard/overview', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '1', title: 'Leads', href: '/dashboard/leads', icon: <Eye size={"18px"} className="ml-0" /> },
                 { id: '2', title: 'Analytics', href: '/dashboard/analytics', icon: <ChartBar size={"18px"} className="ml-0" /> },
                 { id: '3', title: 'Reports', href: '/dashboard/reports', disabled: true, icon: <FileText size={"18px"} className="ml-0" /> },
                 { id: '4', title: 'Price', href: '/dashboard/price', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },

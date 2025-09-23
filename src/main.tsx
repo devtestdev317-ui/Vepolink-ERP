@@ -10,7 +10,9 @@ import RouteError from './components/RouteError.tsx';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
 import { store } from './App/store.ts';
 import { Provider } from "react-redux"
-
+import LeadsList from './dashboard/leads/leads-list.tsx';
+import AddNewLeadPage from './dashboard/leads/add-new/page.tsx';
+import ViewLeadDetailPage from './dashboard/leads/view/page.tsx';
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -31,7 +33,19 @@ const Routes = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
-      }
+      },
+      {
+        path: "leads",
+        element: <LeadsList />,
+      },
+      {
+        path: "leads/view/:id",
+        element: <ViewLeadDetailPage />,
+      },
+      {
+        path: "leads/add",
+        element: <AddNewLeadPage />,
+      },
     ],
   },
 ])

@@ -123,4 +123,12 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  table tr:nth-child(odd) td {
+    @apply bg-white
+  }
+
+  table tr:nth-child(even) td {
+    @apply bg-blue-50
+  }
 }
