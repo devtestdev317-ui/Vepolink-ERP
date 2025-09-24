@@ -42,6 +42,7 @@ import { rankItem } from "@tanstack/match-sorter-utils"
 import { Link } from "react-router-dom"
 import { Card } from "@/components/ui/card"
 import { DashboardStrip } from "@/components/custom/DashboardStrip"
+import { toast } from "sonner"
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
@@ -51,8 +52,21 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     return itemRank.passed
 };
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 export type LEADSDATATYPE = {
     id: string;
+    LeadType: string,
+    InstrumentType: string,
     customerName: string;
     customerCompanyName: string;
     customerContactNumber: string;
@@ -64,9 +78,12 @@ export type LEADSDATATYPE = {
     remark: string;
     status: boolean
 }
-const data: LEADSDATATYPE[] = [
+
+export const DataLeads: LEADSDATATYPE[] = [
     {
         id: "1",
+        LeadType: "Instrumental",
+        InstrumentType: "New client",
         customerName: "Rahul Sharma",
         customerCompanyName: "GreenTech Industries",
         customerContactNumber: "9876543210",
@@ -80,6 +97,8 @@ const data: LEADSDATATYPE[] = [
     },
     {
         id: "2",
+        LeadType: "Instrumental",
+        InstrumentType: "Existing client",
         customerName: "Priya Mehta",
         customerCompanyName: "AquaPure Solutions",
         customerContactNumber: "9123456780",
@@ -93,6 +112,8 @@ const data: LEADSDATATYPE[] = [
     },
     {
         id: "3",
+        LeadType: "Instrumental",
+        InstrumentType: "New client",
         customerName: "Amit Kumar",
         customerCompanyName: "EcoSafe Pvt Ltd",
         customerContactNumber: "9988776655",
@@ -106,6 +127,8 @@ const data: LEADSDATATYPE[] = [
     },
     {
         id: "4",
+        LeadType: "Instrumental",
+        InstrumentType: "New client",
         customerName: "Sneha Patel",
         customerCompanyName: "BioCare Laboratories",
         customerContactNumber: "9012345678",
@@ -143,6 +166,36 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: "LeadType",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Lead Type
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("LeadType")).toUpperCase()}</div>,
+    },
+    {
+        accessorKey: "InstrumentType",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Instrument Type
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("InstrumentType")).toUpperCase()}</div>,
+    },
+    {
         accessorKey: "customerName",
         header: ({ column }) => {
             return (
@@ -151,11 +204,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Customer Name
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("customerName")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("customerName")).toUpperCase()}</div>,
     },
     {
         accessorKey: "customerCompanyName",
@@ -166,11 +219,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Customer Company Name
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("customerCompanyName")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("customerCompanyName")).toUpperCase()}</div>,
     },
     {
         accessorKey: "customerContactNumber",
@@ -181,11 +234,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Customer Contact Number
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("customerContactNumber")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("customerContactNumber")).toUpperCase()}</div>,
     },
     {
         accessorKey: "inquiryLocation",
@@ -196,11 +249,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Inquiry Location
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("inquiryLocation")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("inquiryLocation")).toUpperCase()}</div>,
     },
     {
         accessorKey: "category",
@@ -211,11 +264,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Category
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("category")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("category")).toUpperCase()}</div>,
     },
     {
         accessorKey: "requirement",
@@ -226,11 +279,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Requirement
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("requirement")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("requirement")).toUpperCase()}</div>,
     },
     {
         accessorKey: "sourceOfLeadContact",
@@ -241,11 +294,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Source Of Lead
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("sourceOfLeadContact")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("sourceOfLeadContact")).toUpperCase()}</div>,
     },
     {
         accessorKey: "salesManager",
@@ -256,11 +309,11 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Sales Manager
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("salesManager")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("salesManager")).toUpperCase()}</div>,
     },
     {
         accessorKey: "remark",
@@ -271,20 +324,20 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Remark
-                    <ArrowUpDown />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("remark")).toLocaleUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("remark")).toUpperCase()}</div>,
     },
     {
         accessorKey: "status",
         header: "Status",
         cell: ({ row }) => (
             row.getValue("status") ? (
-                <Badge variant="default" className="bg-green-100 border-green-500 text-green-700" >Active</Badge>
+                <Badge variant="default" className="bg-green-100 border-green-500 text-green-700">Active</Badge>
             ) : (
-                <Badge variant="destructive" className="bg-red-100 border-red-500 text-red-700" >Inactive</Badge>
+                <Badge variant="destructive" className="bg-red-100 border-red-500 text-red-700">Inactive</Badge>
             )
         ),
     },
@@ -292,27 +345,45 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const payment = row.original
+            const lead = row.original
+
+            const handleDelete = () => {
+                // Delete logic would go here
+                toast.success(`Lead ${lead.id} deleted successfully`);
+            };
 
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
-                            <MoreHorizontal />
+                            <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
+                            onClick={() => navigator.clipboard.writeText(lead.id)}
                         >
                             Copy Lead ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem><Link to={`/dashboard/leads/view/${payment.id}`}>View Leads</Link></DropdownMenuItem>
-                        <DropdownMenuItem><Link to={`/dashboard/leads/update/${payment.id}`}>Edit Leads</Link></DropdownMenuItem>
-                        <DropdownMenuItem><Link to={`/dashboard/leads/${payment.id}/delete`}>Delete Leads</Link></DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link to={`/dashboard/leads/view/${lead.id}`} className="w-full">View Lead</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link to={`/dashboard/leads/update/${lead.id}`} className="w-full">Edit Lead</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                            onClick={() => {
+                                // Set the lead to be deleted and open dialog
+                                // You might want to use state management for this
+                                document.dispatchEvent(new CustomEvent('openDeleteDialog', { detail: lead.id }));
+                            }}
+                            className="text-red-600 focus:text-red-600"
+                        >
+                            Delete Lead
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
@@ -320,32 +391,40 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
     },
 ];
 
-
-
 export default function LeadsList() {
-
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [globalFilter, setGlobalFilter] = React.useState("")
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
-    const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({
-            customerName: true,
-            customerCompanyName: true,
-            customerContactNumber: true,
-            inquiryLocation: true,
-            category: true,
-            requirement: true,
-            sourceOfLeadContact: true,
-            salesManager: true,
-            remark: true,
-            status: true
-        })
-    const [rowSelection, setRowSelection] = React.useState({
-    });
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = React.useState({})
+    const [open, setOpen] = React.useState(false)
+    const [leadToDelete, setLeadToDelete] = React.useState<string | null>(null)
+
+    // Listen for delete events from dropdown menu
+    React.useEffect(() => {
+        const handleOpenDeleteDialog = (event: CustomEvent) => {
+            setLeadToDelete(event.detail)
+            setOpen(true)
+        }
+
+        document.addEventListener('openDeleteDialog', handleOpenDeleteDialog as EventListener)
+        
+        return () => {
+            document.removeEventListener('openDeleteDialog', handleOpenDeleteDialog as EventListener)
+        }
+    }, [])
+
+    const handleDelete = () => {
+        if (leadToDelete) {
+            // Implement actual delete logic here
+            toast.success(`Lead ${leadToDelete} deleted successfully`)
+            setOpen(false)
+            setLeadToDelete(null)
+        }
+    }
+
     const table = useReactTable({
-        data,
+        data: DataLeads,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -369,7 +448,7 @@ export default function LeadsList() {
     // Calculate page numbers to display
     const currentPage = table.getState().pagination.pageIndex + 1;
     const pageCount = table.getPageCount();
-    const maxVisiblePages = 5; // Number of page buttons to show
+    const maxVisiblePages = 5;
 
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(pageCount, startPage + maxVisiblePages - 1);
@@ -388,26 +467,24 @@ export default function LeadsList() {
         <div className="w-full p-7">
             <DashboardStrip title="Pre-sales/Leads: List" />
             <Card className="w-full p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                     <div className="relative">
                         <Input
                             placeholder="Search across all fields..."
                             value={globalFilter ?? ""}
-                            onChange={(event) =>
-                                setGlobalFilter(event.target.value)
-                            }
+                            onChange={(event) => setGlobalFilter(event.target.value)}
                             className="max-w-sm h-[40px] w-[320px] pl-[40px]"
                         />
-                        <Search className="size-[20px] absolute left-3 top-[12px]" stroke="#808080" />
+                        <Search className="size-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                     </div>
                     <div className="flex items-center space-x-2">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="h-[40px] ml-auto text-[#6d7a86] font-semibold cursor-pointer">
-                                    <span className="font-medium">Show</span>: Table Columns <ChevronDown />
+                                <Button variant="outline" className="h-[40px] ml-auto">
+                                    Table Columns <ChevronDown className="ml-2 h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="h-[220px]">
+                            <DropdownMenuContent align="end" className="max-h-[220px] overflow-y-auto">
                                 {table
                                     .getAllColumns()
                                     .filter((column) => column.getCanHide())
@@ -415,11 +492,9 @@ export default function LeadsList() {
                                         return (
                                             <DropdownMenuCheckboxItem
                                                 key={column.id}
-                                                className="capitalize  cursor-pointer"
+                                                className="capitalize cursor-pointer"
                                                 checked={column.getIsVisible()}
-                                                onCheckedChange={(value) =>
-                                                    column.toggleVisibility(!!value)
-                                                }
+                                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
                                             >
                                                 {column.id}
                                             </DropdownMenuCheckboxItem>
@@ -427,13 +502,19 @@ export default function LeadsList() {
                                     })}
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Link to="/dashboard/leads/add" className={buttonVariants({
-                            variant: "outline",
-                            className: "h-[40px] ml-auto text-white font-semibold bg-blue-500 hover:bg-blue-600 hover:text-white"
-                        })}>Add New Lead</Link>
+                        <Link 
+                            to="/dashboard/leads/add" 
+                            className={buttonVariants({
+                                variant: "default",
+                                className: "h-[40px] text-white font-semibold bg-blue-500 hover:bg-blue-600"
+                            })}
+                        >
+                            Add New Lead
+                        </Link>
                     </div>
                 </div>
-                <div className="overflow-hidden rounded-md border">
+                
+                <div className="rounded-md border">
                     <Table>
                         <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -476,34 +557,35 @@ export default function LeadsList() {
                                         colSpan={columns.length}
                                         className="h-24 text-center"
                                     >
-                                        No results.
+                                        No results found.
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </div>
+                
                 <div className="flex items-center justify-between py-4">
-                    <div className="text-muted-foreground flex-1 text-sm">
+                    <div className="text-sm text-muted-foreground">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s) selected.
                     </div>
                     <div className="flex items-center space-x-2">
                         <Button
                             variant="outline"
-                            className="h-8 w-8 p-0 border-0 rounded-0 cursor-pointer shadow-none"
+                            size="sm"
                             onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
                         >
-                            <span className="sr-only">Go to previous page</span>
                             <MoveLeft className="h-4 w-4" />
                         </Button>
 
                         {pageNumbers.map(page => (
                             <Button
                                 key={page}
-                                variant={"outline"}
-                                className={`h-8 w-8 p-0 rounded-[4px] cursor-pointer hover:bg-blue-100 hover:border-blue-600 hover:text-blue-600 ${currentPage === page ? "bg-blue-100 border-blue-600 text-blue-600" : ""}`}
+                                variant="outline"
+                                size="sm"
+                                className={`w-8 h-8 p-0 ${currentPage === page ? "bg-blue-100 border-blue-600 text-blue-600" : ""}`}
                                 onClick={() => table.setPageIndex(page - 1)}
                             >
                                 {page}
@@ -512,16 +594,33 @@ export default function LeadsList() {
 
                         <Button
                             variant="outline"
-                            className="h-8 w-8 p-0 border-0 rounded-0 cursor-pointer shadow-none"
+                            size="sm"
                             onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
                         >
-                            <span className="sr-only">Go to next page</span>
                             <MoveRight className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>
             </Card>
+
+            <AlertDialog open={open} onOpenChange={setOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete lead {leadToDelete} 
+                            and remove the data from our servers.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setLeadToDelete(null)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                            Delete Lead
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }

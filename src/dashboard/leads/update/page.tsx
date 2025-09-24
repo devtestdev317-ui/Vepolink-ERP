@@ -5,6 +5,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { BadgeAlert } from 'lucide-react';
+
+import { DataLeads } from "../leads-list";
 const NewLeadSchema = z.object({
     LeadType: z.string().min(1, "Required"),
     InstrumentType: z.string().min(1, "Required"),
@@ -31,7 +33,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
     Command,
     CommandEmpty,
@@ -56,23 +58,24 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
-import { DataLeads } from "../leads-list";
-export default function AddNewLeadPage() {
+export default function UpdateLeadPage() {
+    const { id } = useParams<{ id: string }>();
+    const lead = DataLeads.find(lead => lead.id === id);
     const form = useForm<z.infer<typeof NewLeadSchema>>({
         resolver: zodResolver(NewLeadSchema),
         defaultValues: {
-            LeadType: "",
-            InstrumentType: "",
-            customerName: "",
-            customerCompanyName: "",
-            customerContactNumber: "",
-            inquiryLocation: "",
-            category: "",
-            requirement: "",
-            sourceOfLeadContact: "",
-            salesManager: "",
-            remark: "",
-            status: true,
+            LeadType: lead?.LeadType || "",
+            InstrumentType: lead?.InstrumentType || "",
+            customerName: lead?.customerName || "",
+            customerCompanyName: lead?.customerCompanyName || "",
+            customerContactNumber: lead?.customerContactNumber || "",
+            inquiryLocation: lead?.inquiryLocation || "",
+            category: lead?.category || "",
+            requirement: lead?.requirement || "",
+            sourceOfLeadContact: lead?.sourceOfLeadContact || "",
+            salesManager: lead?.salesManager || "",
+            remark: lead?.remark || "",
+            status: lead?.status || true,
         },
     })
     function onSubmit(values: z.infer<typeof NewLeadSchema>) {
@@ -88,22 +91,23 @@ export default function AddNewLeadPage() {
         value: string;
     }
     const leadTypes: LEADTYPE[] = [
-        { id: 1, label: "Instrumental", value: "instrumental" },
-        { id: 2, label: "Chemical", value: "chemical" },
-        { id: 3, label: "Project", value: "project" },
+        { id: 1, label: "Instrumental", value: "Instrumental" },
+        { id: 2, label: "Chemical", value: "Chemical" },
+        { id: 3, label: "Project", value: "Project" },
     ];
     const ClientTypes: LEADTYPE[] = [
-        { id: 1, label: "New client", value: "new_client" },
-        { id: 2, label: "Existing client", value: "existing_client" },
+        { id: 1, label: "New client", value: "New client" },
+        { id: 2, label: "Existing client", value: "Existing client" },
     ];
-   
 
-    const [selectedInstrument, setSelectedInstrument] = React.useState<string | null>(null);
+
+    const [selectedInstrument, setSelectedInstrument] = React.useState<string | null>(lead?.InstrumentType || null);
     const [ClientList, setClientList] = React.useState<LEADTYPE[]>([]);
 
     function InstrumentChangeHand(value: string) {
+        console.log("value", value);
         setSelectedInstrument(value);
-        if (value !== "existing_client") {
+        if (value !== "Existing client") {
             form.reset();
             setClientList([]);
             setValue("");
@@ -116,6 +120,11 @@ export default function AddNewLeadPage() {
             })));
         }
     }
+    React.useEffect(() => {
+        if (lead?.InstrumentType) {
+            InstrumentChangeHand(lead.InstrumentType);
+        }
+    }, [lead]);
     function handelClientSelect(value: string) {
         DataLeads.forEach((client) => {
             if (client.customerCompanyName === value) {
@@ -150,89 +159,6 @@ export default function AddNewLeadPage() {
                 <div className="flex flex-row w-full">
                     <p className="px-3 py-2.5 mb-8 bg-blue-50 rounded-lg text-blue-700 text-sm flex flex-row items-center gap-x-1  w-full"><BadgeAlert size="18px" /><span>Use the form below to add a new lead to the system. Please ensure all required fields are filled out accurately before submitting.</span></p>
                 </div>
-                {/* <div className="flex flex-wrap">
-                    <div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
-                        <Label className="text-slate-700 font-medium">Lead Type<span className="text-red-500">*</span></Label>
-                        <Select>
-                            <SelectTrigger className="w-full min-h-[40px]">
-                                <SelectValue placeholder="Select Lead Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {
-                                    leadTypes.map((leadType) => (
-                                        <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
-                                    ))
-                                }
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
-                        <Label className="text-slate-700 font-medium">Instrument Type<span className="text-red-500">*</span></Label>
-                        <Select onValueChange={(e) => InstrumentChangeHand(e)}>
-                            <SelectTrigger className="w-full min-h-[40px]">
-                                <SelectValue placeholder="Select Instrument Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {
-                                    ClientTypes.map((leadType) => (
-                                        <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
-                                    ))
-                                }
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {
-                        selectedInstrument === "existing_client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
-                            <Label className="text-slate-700 font-medium">Select Client<span className="text-red-500">*</span></Label>
-                            <Popover open={open} onOpenChange={setOpen} >
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        aria-expanded={open}
-                                        className="w-full justify-between font-normal h-[40px]"
-                                    >
-                                        {value
-                                            ? ClientList.find((client) => client.label === value)?.label
-                                            : "Select Client..."}
-                                        <ChevronsUpDown className="opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[200px] p-0">
-                                    <Command>
-                                        <CommandInput placeholder="Search Client..." className="h-9" />
-                                        <CommandList>
-                                            <CommandEmpty>No Client found.</CommandEmpty>
-                                            <CommandGroup>
-                                                {ClientList.map((framework) => (
-                                                    <CommandItem
-                                                        key={framework.id}
-                                                        value={framework.label}
-                                                        onSelect={(currentValue) => {
-                                                            setValue(currentValue === value ? "" : currentValue)
-                                                            setOpen(false)
-                                                            handelClientSelect(currentValue)
-                                                        }}
-                                                    >
-                                                        {framework.label}
-                                                        <Check
-                                                            className={cn(
-                                                                "ml-auto",
-                                                                value === framework.label ? "opacity-100" : "opacity-0"
-                                                            )}
-                                                        />
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                        </div>)
-
-                    }
-
-                </div> */}
 
                 {/* <Separator className="mt-3 mb-6" /> */}
                 <Form {...form}>
@@ -272,8 +198,7 @@ export default function AddNewLeadPage() {
                                             field.onChange(value);
                                             InstrumentChangeHand(value);
                                         }}
-                                            defaultValue={field.value}
-                                            value={field.value}>
+                                            defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="w-full min-h-[40px]">
                                                     <SelectValue placeholder="Select Instrument Type" />
@@ -292,7 +217,7 @@ export default function AddNewLeadPage() {
                                 )}
                             />
                             {
-                                selectedInstrument === "existing_client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
+                                selectedInstrument === "Existing client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
                                     <Label className="text-slate-700 font-medium">Select Client<span className="text-red-500">*</span></Label>
                                     <Popover open={open} onOpenChange={setOpen} >
                                         <PopoverTrigger asChild>
@@ -620,7 +545,7 @@ export default function AddNewLeadPage() {
                             )}
                         />
                         <div className="w-full flex flex-col items-end justify-end">
-                            <Button type="submit" className="cursor-pointer">Submit</Button>
+                            <Button type="submit" className="cursor-pointer">Update</Button>
 
                         </div>
                     </form>

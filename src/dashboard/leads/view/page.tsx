@@ -1,71 +1,16 @@
 
 import { DashboardStrip } from "@/components/custom/DashboardStrip";
-import type { LEADSDATATYPE } from "../leads-list";
 import { Link, useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { BadgeCheckIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-
+import { DataLeads } from "../leads-list";
 
 export default function ViewLeadDetailPage() {
     const { id } = useParams<{ id: string }>();
-    const data: LEADSDATATYPE[] = [
-        {
-            id: "1",
-            customerName: "Rahul Sharma",
-            customerCompanyName: "Green Tech Industries",
-            customerContactNumber: "9876543210",
-            inquiryLocation: "north",
-            category: "ambient",
-            requirement: "Air Quality Monitoring System",
-            sourceOfLeadContact: "on Draft",
-            salesManager: "Ankit Verma",
-            remark: "Requested urgent quotation",
-            status: true
-        },
-        {
-            id: "2",
-            customerName: "Priya Mehta",
-            customerCompanyName: "Aqua Pure Solutions",
-            customerContactNumber: "9123456780",
-            inquiryLocation: "west",
-            category: "effluent",
-            requirement: "Effluent Treatment Plant",
-            sourceOfLeadContact: "inbound call",
-            salesManager: "Neha Kapoor",
-            remark: "Follow-up scheduled next week",
-            status: false
-        },
-        {
-            id: "3",
-            customerName: "Amit Kumar",
-            customerCompanyName: "Eco Safe Pvt Ltd",
-            customerContactNumber: "9988776655",
-            inquiryLocation: "south",
-            category: "emission",
-            requirement: "Stack Emission Monitoring Device",
-            sourceOfLeadContact: "outbound call",
-            salesManager: "Ravi Singh",
-            remark: "Interested in annual maintenance as well",
-            status: true
-        },
-        {
-            id: "4",
-            customerName: "Sneha Patel",
-            customerCompanyName: "Bio Care Laboratories",
-            customerContactNumber: "9012345678",
-            inquiryLocation: "east",
-            category: "ambient",
-            requirement: "Dust Sampler Instrument",
-            sourceOfLeadContact: "email",
-            salesManager: "Karan Malhotra",
-            remark: "Asked for technical brochure",
-            status: false
-        }
-    ];
-    const lead = data.find(lead => lead.id === id);
+    const lead = DataLeads.find(lead => lead.id === id);
     const { id: leadId, ...leadDetails } = lead || {};
 
     const { customerCompanyName } = leadDetails as { customerCompanyName?: string };
@@ -110,7 +55,7 @@ export default function ViewLeadDetailPage() {
                             </div>
                         )
                     ))}
-                    <div className="w-full md:w-1/2 lg:w-1/2 p-2 flex flex-row items-center justify-end gap-3">
+                    <div className="w-full p-2 flex flex-row items-center justify-end gap-3">
                         <Link to="/dashboard/leads" className={buttonVariants({
                             variant: "ghost",
                             className: "text-sm font-normal bg-slate-300 hover:bg-slate-400 mt-7"

@@ -14,6 +14,7 @@ import LeadsList from './dashboard/leads/leads-list.tsx';
 import AddNewLeadPage from './dashboard/leads/add-new/page.tsx';
 import ViewLeadDetailPage from './dashboard/leads/view/page.tsx';
 import { Toaster } from "@/components/ui/sonner";
+import UpdateLeadPage from './dashboard/leads/update/page.tsx';
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +43,10 @@ const Routes = createBrowserRouter([
       {
         path: "leads/view/:id",
         element: <ViewLeadDetailPage />,
+      },
+      {
+        path: "leads/update/:id",
+        element: <UpdateLeadPage />,
       },
       {
         path: "leads/add",
