@@ -151,7 +151,7 @@ export default function AddNewLeadPage() {
 
     function InstrumentChangeHand(value: string) {
         setSelectedInstrument(value);
-        if (value !== "new_client") {
+        if (value !== "existing_client") {
             form.reset();
             setClientList([]);
             setValue("");
@@ -224,7 +224,7 @@ export default function AddNewLeadPage() {
                         </Select>
                     </div>
                     {
-                        selectedInstrument === "new_client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
+                        selectedInstrument === "existing_client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
                             <Label className="text-slate-700 font-medium">Select Client<span className="text-red-500">*</span></Label>
                             <Popover open={open} onOpenChange={setOpen} >
                                 <PopoverTrigger asChild>
