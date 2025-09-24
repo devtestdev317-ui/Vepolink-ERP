@@ -348,10 +348,6 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
         cell: ({ row }) => {
             const lead = row.original
 
-            const handleDelete = () => {
-                // Delete logic would go here
-                toast.success(`Lead ${lead.id} deleted successfully`);
-            };
 
             return (
                 <DropdownMenu>
