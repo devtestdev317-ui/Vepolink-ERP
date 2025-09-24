@@ -44,6 +44,7 @@ import { Card } from "@/components/ui/card"
 import { DashboardStrip } from "@/components/custom/DashboardStrip"
 import { toast } from "sonner"
 
+
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
     addMeta({
@@ -374,7 +375,7 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                         <DropdownMenuItem>
                             <Link to={`/dashboard/leads/update/${lead.id}`} className="w-full">Edit Lead</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                             onClick={() => {
                                 // Set the lead to be deleted and open dialog
                                 // You might want to use state management for this
@@ -408,7 +409,7 @@ export default function LeadsList() {
         }
 
         document.addEventListener('openDeleteDialog', handleOpenDeleteDialog as EventListener)
-        
+
         return () => {
             document.removeEventListener('openDeleteDialog', handleOpenDeleteDialog as EventListener)
         }
@@ -502,8 +503,8 @@ export default function LeadsList() {
                                     })}
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Link 
-                            to="/dashboard/leads/add" 
+                        <Link
+                            to="/dashboard/leads/add"
                             className={buttonVariants({
                                 variant: "default",
                                 className: "h-[40px] text-white font-semibold bg-blue-500 hover:bg-blue-600"
@@ -513,7 +514,7 @@ export default function LeadsList() {
                         </Link>
                     </div>
                 </div>
-                
+
                 <div className="rounded-md border">
                     <Table>
                         <TableHeader>
@@ -564,7 +565,7 @@ export default function LeadsList() {
                         </TableBody>
                     </Table>
                 </div>
-                
+
                 <div className="flex items-center justify-between py-4">
                     <div className="text-sm text-muted-foreground">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -609,7 +610,7 @@ export default function LeadsList() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete lead {leadToDelete} 
+                            This action cannot be undone. This will permanently delete lead {leadToDelete}
                             and remove the data from our servers.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
