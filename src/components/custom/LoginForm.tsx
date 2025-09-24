@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { z } from "zod"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schema/LoginSchema";
@@ -14,10 +14,13 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import { useGetAllProductsQuery } from "@/App/service/Api";
+import { toast } from "sonner"
+// import { useGetAllProductsQuery } from "@/App/service/Api";
 export function LoginForm() {
-    const res = useGetAllProductsQuery({});
-    console.log(res)
+    // const res = useGetAllProductsQuery({});
+    // console.log(res)
+
+
     const isMobile = useMediaQuery('(max-width: 768px)');
     const [isShowPassord, hidePassword] = useState(true)
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -28,7 +31,24 @@ export function LoginForm() {
         },
     })
     function onSubmit(values: z.infer<typeof LoginSchema>) {
-        console.log(values)
+        if (values.userId === "admin" && values.password === "admin@123") {
+            toast.success("Login Successful", {
+                description: "Sunday, December 03, 2023 at 9:00 AM",
+                action: {
+                    label: "Success",
+                    onClick: () => console.log("Success"),
+                },
+            })
+        }
+        else {
+            toast.error("Login Failed", {
+                description: "Invalid User ID or Password",
+                action: {
+                    label: "Undo",
+                    onClick: () => console.log("Undo"),
+                },
+            })
+        }
     }
 
     return (
@@ -39,6 +59,7 @@ export function LoginForm() {
             }
 
             <Card className="max-w-[330px] rounded-sm relative z-10 bg-[#dfe6f6] border-white sm:max-w-[320px] w-full">
+                <Link to="/dashboard" className="absolute bottom-[-80px] left-[50%] translate-[-50%] text-blue-500 text-[12px] z-20 flex items-center gap-1 px-4 py-2 bg-blue-600 text-white font-medium rounded">Dashboard <ArrowLeft className="rotate-180" size={15} /></Link>
                 <CardHeader className="flex flex-col items-center gap-3">
                     <img src="assets/images/logo.png" className="w-[130px]" />
                 </CardHeader>

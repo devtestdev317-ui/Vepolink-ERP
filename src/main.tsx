@@ -13,6 +13,7 @@ import { Provider } from "react-redux"
 import LeadsList from './dashboard/leads/leads-list.tsx';
 import AddNewLeadPage from './dashboard/leads/add-new/page.tsx';
 import ViewLeadDetailPage from './dashboard/leads/view/page.tsx';
+import { Toaster } from "@/components/ui/sonner";
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -60,6 +61,7 @@ createRoot(rootElement).render(
     <Provider store={store}>
       <ErrorBoundary>
         <RouterProvider router={Routes} />
+        <Toaster position='top-right' richColors closeButton />
       </ErrorBoundary>
 
     </Provider>
