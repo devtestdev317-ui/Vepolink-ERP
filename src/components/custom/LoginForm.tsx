@@ -7,38 +7,49 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { LoginSchema } from "@/schema/LoginSchema";
+import { VepolinkERPSchemas } from "@/schema/SalesManagerLeadSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom"
 // import { useGetAllProductsQuery } from "@/App/service/Api";
+// import { useAuthUserMutation } from "@/App/service/Api";
 export function LoginForm() {
     // const res = useGetAllProductsQuery({});
     // console.log(res)
-
+    // const [authUser] = useAuthUserMutation();
 
     const isMobile = useMediaQuery('(max-width: 768px)');
     const [isShowPassord, hidePassword] = useState(true)
-    const form = useForm<z.infer<typeof LoginSchema>>({
-        resolver: zodResolver(LoginSchema),
+    const form = useForm<z.infer<typeof VepolinkERPSchemas.SignInSchema>>({
+        resolver: zodResolver(VepolinkERPSchemas.SignInSchema),
         defaultValues: {
-            userId: "",
-            password: ""
+            userId: "admin",
+            password: "admin@123"
         },
     })
-    function onSubmit(values: z.infer<typeof LoginSchema>) {
+    const navigate = useNavigate();
+    async function onSubmit(values: z.infer<typeof VepolinkERPSchemas.SignInSchema>) {
+        // const res = await authUser(values)
         if (values.userId === "admin" && values.password === "admin@123") {
+            const date = new Date();
+            const newDate = new Intl.DateTimeFormat("en-GB", {
+                dateStyle: "full",
+                timeStyle: "long",
+                timeZone: "Asia/Kolkata",
+            }).format(date)
             toast.success("Login Successful", {
-                description: "Sunday, December 03, 2023 at 9:00 AM",
+                description: newDate.toString(),
                 action: {
                     label: "Success",
                     onClick: () => console.log("Success"),
                 },
             })
+            navigate("/dashboard");
         }
         else {
             toast.error("Login Failed", {
@@ -59,7 +70,7 @@ export function LoginForm() {
             }
 
             <Card className="max-w-[330px] rounded-sm relative z-10 bg-[#dfe6f6] border-white sm:max-w-[320px] w-full">
-                <Link to="/dashboard" className="absolute bottom-[-80px] left-[50%] translate-[-50%] text-blue-500 text-[12px] z-20 flex items-center gap-1 px-4 py-2 bg-blue-600 text-white font-medium rounded">Dashboard <ArrowLeft className="rotate-180" size={15} /></Link>
+                <Link to="/dashboard" className="absolute bottom-[-80px] left-[50%] translate-[-50%] text-[12px] z-20 flex items-center gap-1 px-4 py-2 bg-blue-600 text-white font-medium rounded">Dashboard <ArrowLeft className="rotate-180" size={15} /></Link>
                 <CardHeader className="flex flex-col items-center gap-3">
                     <img src="assets/images/logo.png" className="w-[130px]" />
                 </CardHeader>
@@ -97,12 +108,26 @@ export function LoginForm() {
                                 )}
                             />
                             {/* isShowPassord, hidePassword */}
-                            <div className="mt-1">
-                                <div className="flex items-center gap-3">
-                                    <Checkbox id="terms" className="bg-transparent border-blue-500 w-[25px] h-[22px] data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500" />
-                                    <Label htmlFor="terms">Accept terms and conditions</Label>
-                                </div>
-                            </div>
+                            <FormField
+                                control={form.control}
+                                name="rememberMe"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col items-start gap-2">
+                                        <FormControl>
+                                            <div className="flex items-center gap-3">
+                                                <Checkbox
+                                                    checked={!!field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    id="terms"
+                                                    className="bg-transparent border-blue-500 w-[25px] h-[22px] data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                                                />
+                                                <Label htmlFor="terms">Accept terms and conditions</Label>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage className="w-full text-[12px]" />
+                                    </FormItem>
+                                )}
+                            />
                             <Button className="h-[40px] cursor-pointer">Authenticate <ArrowRight /></Button>
                             <div className="text-[12px] text-center text-slate-600">Having trouble in login <Link className="text-blue-500" to="/" >Click here</Link></div>
                         </form>

@@ -49,21 +49,7 @@ interface SubnavItem {
 export default function DashboardPage() {
 
     const sections: SectionProps[] = [
-        {
-            id: '1',
-            title: 'Pre-sales/Leads',
-            description: 'Get a quick overview of your dashboard.',
-            subnavItems: [
-                { id: '1', title: 'Leads', href: '/dashboard/leads', icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '2', title: 'Analytics', href: '/dashboard/analytics', icon: <ChartBar size={"18px"} className="ml-0" /> },
-                { id: '3', title: 'Reports', href: '/dashboard/reports', disabled: true, icon: <FileText size={"18px"} className="ml-0" /> },
-                { id: '4', title: 'Price', href: '/dashboard/price', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '5', title: 'Comparisons', href: '/dashboard/comparisons', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '6', title: 'Case Studies', href: '/dashboard/case-studies', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '7', title: 'Events', href: '/dashboard/events', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '8', title: 'Contact Sales', href: '/dashboard/contact-sales', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-            ]
-        },
+
         {
             id: '2',
             title: 'Sales',
@@ -71,69 +57,26 @@ export default function DashboardPage() {
             subnavItems: [
                 {
                     id: "1",
-                    title: "Overview",
-                    href: "/dashboard/overview",
-                    disabled: true,
+                    title: "Add New Lead",
+                    href: "/dashboard/leads/add",
+                    disabled: false,
                     icon: <Eye size={"18px"} className="ml-0" />
                 },
                 {
-                    id: "2",
-                    title: "Analytics",
-                    href: "/dashboard/analytics",
-                    icon: <Eye size={"18px"} className="ml-0" />,
-                    disabled: true
+                    id: '2',
+                    title: 'View Leads',
+                    href: '/dashboard/leads',
+                    icon: <Eye size={"18px"}
+                        className="ml-0" />
                 },
                 {
-                    id: "3",
-                    title: "Reports",
+                    id: '3',
+                    title: 'Sales Manager Leads',
+                    href: '/dashboard/sales-manager/leads',
+                    icon: <Eye size={"18px"}
+                        className="ml-0" />
+                },
 
-                    href: "/dashboard/reports",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "4",
-                    title: "Pricing",
-                    href: "/dashboard/pricing",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "5",
-                    title: "Comparisons",
-                    href: "/dashboard/comparisons",
-                    disabled: true,
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "6",
-                    title: "Case Studies",
-                    href: "/dashboard/case-studies",
-                    disabled: true,
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "7",
-                    title: "Webinars",
-                    href: "/dashboard/webinars",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "8",
-                    title: "ROI Calculator",
-                    href: "/dashboard/roi-calculator",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "9",
-                    title: "Request Demo",
-                    href: "/dashboard/request-demo",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "10",
-                    title: "Contact Sales",
-                    href: "/dashboard/contact-sales",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                }
             ]
         },
         {
@@ -326,9 +269,9 @@ export default function DashboardPage() {
         },
     ]
     return Section ? (
-        <div className=" p-4 md:py-6  min-h-[calc(100vh-48px)]">
-            <div className="bg-white w-full overflow-hidden">
-                <div className="flex gap-2 w-full overflow-x-auto">
+        <div className=" p-4 md:pt-6 md:pb-0  md:min-h-[calc(100vh-48px)]">
+            <div className="bg-white w-full overflow-hidden md:min-h-[calc(100vh-75px)]">
+                <div className="flex gap-2 w-full overflow-x-auto md:min-h-[calc(100vh-75px)]">
                     {sections.map(section => (
                         <Section key={section.id} id={section.id} title={section.title} description={section.description} subnavItems={section.subnavItems} />
                     ))}

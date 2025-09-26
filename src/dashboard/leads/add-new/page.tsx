@@ -96,7 +96,7 @@ export default function AddNewLeadPage() {
         { id: 1, label: "New client", value: "new_client" },
         { id: 2, label: "Existing client", value: "existing_client" },
     ];
-   
+
 
     const [selectedInstrument, setSelectedInstrument] = React.useState<string | null>(null);
     const [ClientList, setClientList] = React.useState<LEADTYPE[]>([]);
@@ -134,10 +134,10 @@ export default function AddNewLeadPage() {
         form.clearErrors();
     }
     return (
-        <div className="w-full p-7">
+        <div className="w-full p-3 md:p-7">
             <DashboardStrip title="Pre-sales/Leads: Add New" />
 
-            <Card className="p-7 rounded-xl border border-slate-200/60 dark:border-slate-700/60 mt-4 gap-4">
+            <Card className="p-2 md:p-4 lg:p-7 rounded-xl border border-slate-200/60 dark:border-slate-700/60 mt-4 gap-4">
                 <div className="flex items-center justify-between">
                     <h4 data-slot="card-title" className="leading-none flex items-center gap-3 text-slate-800">
                         <div className="p-2 bg-blue-50 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pen-line w-5 h-5 text-blue-600" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"></path></svg></div>Add New Lead</h4>
@@ -237,12 +237,12 @@ export default function AddNewLeadPage() {
                 {/* <Separator className="mt-3 mb-6" /> */}
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-wrap align-baseline items-start">
-                        <div className="flex flex-wrap w-full   items-start">
+                        <div className="flex flex-wrap w-full space-y-4 md:space-y-0 md:space-x-4 items-start">
                             <FormField
                                 control={form.control}
                                 name="LeadType"
                                 render={({ field }) => (
-                                    <FormItem className="w-1/4 px-2">
+                                    <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                         <Label className="text-slate-700 font-medium">Lead Type<span className="text-red-500">*</span></Label>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
@@ -266,7 +266,7 @@ export default function AddNewLeadPage() {
                                 control={form.control}
                                 name="InstrumentType"
                                 render={({ field }) => (
-                                    <FormItem className="w-1/4 px-2">
+                                    <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                         <Label className="text-slate-700 font-medium">Instrument Type<span className="text-red-500">*</span></Label>
                                         <Select onValueChange={(value) => {
                                             field.onChange(value);
@@ -292,7 +292,7 @@ export default function AddNewLeadPage() {
                                 )}
                             />
                             {
-                                selectedInstrument === "existing_client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
+                                selectedInstrument === "existing_client" && (<div className="w-full md:w-1/2 lg:w-1/4 flex flex-col px-2 gap-2">
                                     <Label className="text-slate-700 font-medium">Select Client<span className="text-red-500">*</span></Label>
                                     <Popover open={open} onOpenChange={setOpen} >
                                         <PopoverTrigger asChild>
@@ -348,7 +348,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="customerName"
                             render={({ field }) => (
-                                <FormItem className="w-1/4 px-2">
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Customer Name <span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter Customer Name" className=" h-[40px]" {...field} />
@@ -361,7 +361,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="customerCompanyName"
                             render={({ field }) => (
-                                <FormItem className="w-1/4 px-2">
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Customer Company Name  <span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter Customer Company Name" className=" h-[40px]" {...field} />
@@ -374,7 +374,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="customerContactNumber"
                             render={({ field }) => (
-                                <FormItem className="w-1/4 px-2">
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Customer Contact Number</FormLabel>
                                     <FormControl>
                                         <Input type="tel" placeholder="Enter Customer Contact Number" className=" h-[40px]" {...field} />
@@ -388,7 +388,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="inquiryLocation"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col w-1/4 px-2">
+                                <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Inquiry Location <span className="text-red-500">*</span></FormLabel>
                                     <Popover >
                                         <PopoverTrigger asChild>
@@ -451,7 +451,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="category"
                             render={({ field }) => (
-                                <FormItem className="w-1/4 px-2">
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Category</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter Category" className=" h-[40px]" {...field} />
@@ -464,7 +464,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="requirement"
                             render={({ field }) => (
-                                <FormItem className="w-1/4 px-2">
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Requirement<span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter Requirement" className=" h-[40px]" {...field} />
@@ -478,7 +478,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="sourceOfLeadContact"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col w-1/4 px-2">
+                                <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Source Of Lead</FormLabel>
                                     <Popover >
                                         <PopoverTrigger asChild>
@@ -542,7 +542,7 @@ export default function AddNewLeadPage() {
                             control={form.control}
                             name="salesManager"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col w-1/4 px-2">
+                                <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Sales Manager</FormLabel>
                                     <Popover >
                                         <PopoverTrigger asChild>
