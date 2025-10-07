@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import type {
     ColumnDef,
     ColumnFiltersState,
@@ -15,7 +14,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, Search, MoveLeft, MoveRight, ScrollText, FileText, RotateCw } from "lucide-react"
+import { ArrowUpDown, ChevronDown, Search, MoveLeft, MoveRight, ScrollText, FileText, RotateCw, X, File } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -51,6 +50,7 @@ import {
 } from "@/components/ui/field"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
+
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     const itemRank = rankItem(row.getValue(columnId), value)
     addMeta({
@@ -58,10 +58,20 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     })
     return itemRank.passed
 };
+
 interface FRAMEWORKS {
     value: string,
     label: string
 }
+
+interface UploadedFile {
+    id: string;
+    file: File;
+    previewUrl?: string;
+    uploadProgress: number;
+}
+
+import { ScrollArea } from "@/components/ui/scroll-area"
 export default function QuoteApprovelPage() {
     const frameworks: FRAMEWORKS[] = [
         {
@@ -81,7 +91,12 @@ export default function QuoteApprovelPage() {
             label: "Sales Manager",
         }
     ]
+
     const [modelOpen, setModelOpen] = React.useState(false);
+    const [uploadedFiles, setUploadedFiles] = React.useState<UploadedFile[]>([]);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
     const columns: ColumnDef<SalesManagerLead>[] = [
         {
             accessorKey: "leadId",
@@ -144,12 +159,12 @@ export default function QuoteApprovelPage() {
             cell: ({ row }) => <div onClick={() => HandleModel(row.original.leadId)} className="uppercase px-3">{String(row.getValue("customerContactNumber")).toUpperCase()}</div>,
         }
     ];
+
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [globalFilter, setGlobalFilter] = React.useState("")
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
-
 
     const table = useReactTable({
         data: SalesManagerLeadData,
@@ -172,7 +187,9 @@ export default function QuoteApprovelPage() {
             rowSelection,
         },
     })
+
     const [selectedFrameworks, setSelectedFrameworks] = React.useState<string[]>([]);
+
     // Calculate page numbers to display
     const currentPage = table.getState().pagination.pageIndex + 1;
     const pageCount = table.getPageCount();
@@ -190,6 +207,7 @@ export default function QuoteApprovelPage() {
     for (let i = startPage; i <= endPage; i++) {
         pageNumbers.push(i);
     }
+
     function HandleModel(leadId: string) {
         setModelOpen(true);
         return leadId
@@ -197,6 +215,50 @@ export default function QuoteApprovelPage() {
 
     const [actTab, setActTab] = React.useState<string | null>(null)
 
+    const processFiles = (files: File[]) => {
+        const newFiles: UploadedFile[] = files.map(file => ({
+            id: Math.random().toString(36).substr(2, 9),
+            file,
+            uploadProgress: 0,
+        }));
+
+        setUploadedFiles(prev => [...prev, ...newFiles]);
+
+        // Simulate upload progress
+        newFiles.forEach((fileObj) => {
+            simulateUploadProgress(fileObj.id);
+        });
+    };
+
+    const simulateUploadProgress = (fileId: string) => {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setUploadedFiles(prev =>
+                prev.map(file =>
+                    file.id === fileId
+                        ? { ...file, uploadProgress: Math.min(progress, 100) }
+                        : file
+                )
+            );
+
+            if (progress >= 100) {
+                clearInterval(interval);
+            }
+        }, 100);
+    };
+
+    const removeFile = (fileId: string) => {
+        setUploadedFiles(prev => prev.filter(file => file.id !== fileId));
+    };
+
+    const formatFileSize = (bytes: number): string => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
 
     return (
         <div className="w-full p-7">
@@ -339,88 +401,200 @@ export default function QuoteApprovelPage() {
                             <div className="leading-5 text-xs text-gray-500">Create a new approval</div>
                         </div>
                     </DialogHeader>
-                    <DialogDescription>
-                        {/* actTab, setActTab */}
-                        <div className="flex flex-wrap gap-x-2">
-                            {
-                                actTab === null ?
-                                    <>
-                                        <div className="w-full mb-2.5 font-medium">Select Approvel For</div>
-                                        {
-                                            [{ name: "Quote", icon: <ScrollText stroke="#fff" size={30} /> }, { name: "PI", icon: <FileText size={30} stroke="#fff" /> }].map((item) => (
-                                                <Card key={item.name} className="flex-2 flex flex-row gap-3 p-2 items-center rounded-[6px]" onClick={() => setActTab(item.name)}>
-                                                    <div className="w-[45px] h-[45px] flex flex-col items-center justify-center rounded-[6px] bg-[#584ccc]">{item.icon}</div>
-                                                    <div>
-                                                        {item.name}
-                                                    </div>
-                                                </Card>
-                                            ))
-                                        }
-                                    </>
+                    <ScrollArea className="max-h-[360px] mr-[-10px] pr-[10px]">
 
-                                    : <>
-                                        <div className="w-full flex flex-col space-y-4">
-                                            <div className="flex flex-col space-y-2.5">
-                                                <Label >Name Of Company</Label>
-                                                <Input type="text" defaultValue="ABC Pharmaceuticals Ltd" className="h-[45px] text-black" readOnly disabled />
-                                            </div>
+                        <DialogDescription>
+                            <div className="flex flex-wrap gap-x-2">
+                                {
+                                    actTab === null ?
+                                        <>
+                                            <div className="w-full mb-2.5 font-medium">Select Approvel For</div>
+                                            {
+                                                [{ name: "Quote", icon: <ScrollText stroke="#fff" size={30} /> }, { name: "PI", icon: <FileText size={30} stroke="#fff" /> }].map((item) => (
+                                                    <Card key={item.name} className="flex-2 flex flex-row gap-3 p-2 items-center rounded-[6px]" onClick={() => setActTab(item.name)}>
+                                                        <div className="w-[45px] h-[45px] flex flex-col items-center justify-center rounded-[6px] bg-[#584ccc]">{item.icon}</div>
+                                                        <div>
+                                                            {item.name}
+                                                        </div>
+                                                    </Card>
+                                                ))
+                                            }
+                                        </>
 
-                                            <div className="flex flex-col space-y-2.5">
-                                                <Label >Approvers</Label>
-                                                <FieldSet className="">
-                                                    <div className="flex flex-wrap gap-0">
-                                                        {
-                                                            frameworks.map((item) => (
-                                                                <div key={item.value} className="w-full md:w-1/2 p-1">
-                                                                    <div className="flex items-center space-x-2">
-                                                                        <Label htmlFor={item.value} className={`relative p-2 py-3 border rounded w-full font-normal ${selectedFrameworks.includes(item.value) ? "bg-[#584ccc] border-[#584ccc] text-white" : ""}`}>
-                                                                            <Checkbox
-                                                                                id={item.value}
-                                                                                checked={selectedFrameworks.includes(item.value)}
-                                                                                onCheckedChange={(checked) => {
-                                                                                    if (checked) {
-                                                                                        setSelectedFrameworks(prev => [...prev, item.value]);
-                                                                                    } else {
-                                                                                        setSelectedFrameworks(prev => prev.filter(framework => framework !== item.value));
-                                                                                    }
-                                                                                }}
-                                                                                className="absolute right-2 "
-                                                                            />
-                                                                            {item.label}
-                                                                        </Label>
+                                        : <>
+                                            <div className="w-full flex flex-col space-y-4">
+                                                <div className="flex flex-col space-y-2.5">
+                                                    <Label >Name Of Company</Label>
+                                                    <Input type="text" defaultValue="ABC Pharmaceuticals Ltd" className="h-[45px] text-black" readOnly disabled />
+                                                </div>
+
+                                                <div className="flex flex-col space-y-2.5">
+                                                    <Label >Approvers</Label>
+                                                    <FieldSet className="">
+                                                        <div className="flex flex-wrap gap-0">
+                                                            {
+                                                                frameworks.map((item) => (
+                                                                    <div key={item.value} className="w-full md:w-1/2 p-1">
+                                                                        <div className="flex items-center space-x-2">
+                                                                            <Label htmlFor={item.value} className={`relative p-2 py-3 border rounded w-full font-normal ${selectedFrameworks.includes(item.value) ? "bg-[#584ccc] border-[#584ccc] text-white" : ""}`}>
+                                                                                <Checkbox
+                                                                                    id={item.value}
+                                                                                    checked={selectedFrameworks.includes(item.value)}
+                                                                                    onCheckedChange={(checked) => {
+                                                                                        if (checked) {
+                                                                                            setSelectedFrameworks(prev => [...prev, item.value]);
+                                                                                        } else {
+                                                                                            setSelectedFrameworks(prev => prev.filter(framework => framework !== item.value));
+                                                                                        }
+                                                                                    }}
+                                                                                    className="absolute right-2 "
+                                                                                />
+                                                                                {item.label}
+                                                                            </Label>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            ))
-                                                        }
+                                                                ))
+                                                            }
+                                                        </div>
+
+                                                    </FieldSet>
+                                                </div>
+                                                <div className="flex flex-col space-y-2.5">
+                                                    <Label >Remarks</Label>
+                                                    <Textarea placeholder="If needed, add some extra info that'll help the recipients about the request." />
+                                                </div>
+                                                <div className="flex flex-col space-y-2.5">
+                                                    <Label>Add Attachment</Label>
+
+                                                    {/* File drop zone with button trigger */}
+                                                    <div
+                                                        className={`border-dashed border-2 p-4 rounded flex flex-col items-center justify-center transition-colors ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                                                            }`}
+                                                        onDragOver={(e) => {
+                                                            e.preventDefault();
+                                                            setIsDragging(true);
+                                                        }}
+                                                        onDragLeave={(e) => {
+                                                            e.preventDefault();
+                                                            setIsDragging(false);
+                                                        }}
+                                                        onDrop={(e) => {
+                                                            e.preventDefault();
+                                                            setIsDragging(false);
+                                                            const files = e.dataTransfer.files;
+                                                            if (files) {
+                                                                processFiles(Array.from(files));
+                                                            }
+                                                        }}
+                                                    >
+                                                        <div className="flex flex-col space-y-2 items-center justify-center">
+                                                            <img src="/assets/images/upload-file.png" width={55} height={55} alt="Upload file" />
+                                                            <div className="text-gray-600 font-medium mt-2">
+                                                                {isDragging ? 'Drop files here' : 'Drag File here'}
+                                                            </div>
+
+                                                            {/* Use a Button instead of direct click on the div */}
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                className="text-blue-600 font-normal"
+                                                                onClick={() => fileInputRef.current?.click()}
+                                                            >
+                                                                Or Select a File
+                                                            </Button>
+
+                                                            <div className="text-gray-500 text-sm mt-1">
+                                                                Supports multiple files
+                                                            </div>
+                                                        </div>
                                                     </div>
 
-                                                </FieldSet>
-                                            </div>
-                                            <div className="flex flex-col space-y-2.5">
-                                                <Label >Remarks</Label>
-                                                <Textarea placeholder="If needed, add some extra info that'll help the recipients about the request." />
-                                            </div>
-                                            <div className="flex flex-col space-y-2.5">
-                                                <Label >Add Attachment</Label>
-                                                <Label htmlFor="attacheDoc" className="border-dashed border-2 p-4 rounded flex flex-col items-center justify-center ">
-                                                    <div className="flex flex-col space-y-2 items-center justify-center ">
-                                                        <img src="/assets/images/upload-file.png" width={55} height={55} />
-                                                        <div className="text-gray-600 font-medium mt-2">Drag File here</div>
-                                                        <div className="text-blue-600 font-normal ">Or Select a File </div>
-                                                    </div>
-                                                    <Input id="attacheDoc" className="hidden" type="file" />
-                                                </Label>
-                                            </div>
-                                        </div>
-                                        <div className="w-full  flex flex-row justify-between mt-3">
-                                            <Button variant="secondary" className="cursor-pointer" type="button" onClick={() => setActTab(null)}>Back</Button>
-                                            <Button type="button" className="cursor-pointer" onClick={() => setModelOpen(false)}>Submit</Button>
-                                        </div>
-                                    </>
+                                                    {/* Hidden file input */}
+                                                    <Input
+                                                        ref={fileInputRef}
+                                                        multiple
+                                                        className="hidden"
+                                                        type="file"
+                                                        onChange={(e) => {
+                                                            const files = e.target.files;
+                                                            if (files && files.length > 0) {
+                                                                processFiles(Array.from(files));
+                                                            }
+                                                            // Reset the input
+                                                            if (e.target) {
+                                                                e.target.value = '';
+                                                            }
+                                                        }}
+                                                    />
 
-                            }
-                        </div>
-                    </DialogDescription>
+                                                    {/* Uploaded files list */}
+                                                    {uploadedFiles.length > 0 && (
+                                                        <div className="mt-4 space-y-3">
+                                                            <Label className="text-sm font-medium">Selected Files ({uploadedFiles.length})</Label>
+                                                            <div className="space-y-2">
+                                                                {uploadedFiles.map((fileObj) => (
+                                                                    <div key={fileObj.id} className="flex items-center justify-between p-3 border rounded-lg bg-gray-50">
+                                                                        <div className="flex items-center space-x-3 flex-1">
+                                                                            <File className="h-5 w-5 text-gray-500" />
+                                                                            <div className="flex-1 min-w-0">
+                                                                                <div className="text-sm font-medium truncate">
+                                                                                    {fileObj.file.name}
+                                                                                </div>
+                                                                                <div className="text-xs text-gray-500">
+                                                                                    {formatFileSize(fileObj.file.size)}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/* Upload progress */}
+                                                                        <div className="flex items-center space-x-2">
+                                                                            {fileObj.uploadProgress < 100 ? (
+                                                                                <div className="w-16 bg-gray-200 rounded-full h-2">
+                                                                                    <div
+                                                                                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                                                                        style={{ width: `${fileObj.uploadProgress}%` }}
+                                                                                    />
+                                                                                </div>
+                                                                            ) : (
+                                                                                <div className="text-green-600 text-xs font-medium">
+                                                                                    Uploaded
+                                                                                </div>
+                                                                            )}
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="sm"
+                                                                                className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                                                                                onClick={() => removeFile(fileObj.id)}
+                                                                            >
+                                                                                <X className="h-4 w-4" />
+                                                                            </Button>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="w-full flex flex-row justify-between mt-3">
+                                                <Button variant="secondary" className="cursor-pointer" type="button" onClick={() => setActTab(null)}>Back</Button>
+                                                <Button
+                                                    type="button"
+                                                    className="cursor-pointer"
+                                                    onClick={() => {
+                                                        // Handle form submission with uploaded files
+                                                        console.log('Uploaded files:', uploadedFiles);
+                                                        setModelOpen(false);
+                                                    }}
+                                                >
+                                                    Submit
+                                                </Button>
+                                            </div>
+                                        </>
+                                }
+                            </div>
+                        </DialogDescription>
+                    </ScrollArea>
                 </DialogContent>
             </Dialog>
         </div>
