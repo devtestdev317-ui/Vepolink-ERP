@@ -6,12 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { BadgeCheckIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { DataLeads } from "../leads-list";
-
+import {SalesManagerLeadData} from "@/dummy-data/SalesManagerDummyLeadData";
 export default function ViewLeadDetailPage() {
     const { id } = useParams<{ id: string }>();
-    const lead = DataLeads.find(lead => lead.id === id);
-    const { id: leadId, ...leadDetails } = lead || {};
+    const lead = SalesManagerLeadData.find(lead => lead.leadId === id);
+    const { leadId: leadId, ...leadDetails } = lead || {};
 
     const { customerCompanyName } = leadDetails as { customerCompanyName?: string };
     if (!lead) {

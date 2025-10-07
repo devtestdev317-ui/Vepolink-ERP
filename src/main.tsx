@@ -16,7 +16,10 @@ import ViewLeadDetailPage from './dashboard/leads/view/page.tsx';
 import { Toaster } from "@/components/ui/sonner";
 import UpdateLeadPage from './dashboard/leads/update/page.tsx';
 import SalesManagerLeadsPage from './dashboard/sales-manager/page.tsx';
-import UpdateLeadSalesManagerPage from './dashboard/sales-manager/update/page.tsx';
+import ListLeadsPage from './dashboard/list-leads/page.tsx';
+import InspectionListPage from './dashboard/leads/Inspection-List/page.tsx';
+import QuoteApprovelPage from './dashboard/leads/approvel/ApprovelListing.tsx';
+import ApprovelList from './dashboard/leads/approvel/list/page.tsx';
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -39,6 +42,10 @@ const Routes = createBrowserRouter([
         element: <Dashboard />,
       },
       {
+        path: "lead",
+        element: <ListLeadsPage />,
+      },
+      {
         path: "leads",
         element: <LeadsList />,
       },
@@ -55,13 +62,23 @@ const Routes = createBrowserRouter([
         element: <AddNewLeadPage />,
       },
       {
+        path: "leads/inspection",
+        element: <InspectionListPage />,
+      },
+      {
         path: "sales-manager/leads",
         element: <SalesManagerLeadsPage />,
       },
+
+      // Approvel
       {
-        path: "leads/add-details/:id",
-        element: <UpdateLeadSalesManagerPage />,
+        path: "leads/approvel",
+        element: <QuoteApprovelPage />,
       },
+      {
+        path: "leads/approvel/list/:id",
+        element: <ApprovelList />,
+      }
     ],
   },
 ])

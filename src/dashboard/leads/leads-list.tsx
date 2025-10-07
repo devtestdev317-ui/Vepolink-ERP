@@ -64,86 +64,13 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export type LEADSDATATYPE = {
-    id: string;
-    LeadType: string,
-    InstrumentType: string,
-    customerName: string;
-    customerCompanyName: string;
-    customerContactNumber: string;
-    inquiryLocation: string;
-    category: string;
-    requirement: string;
-    sourceOfLeadContact: string;
-    salesManager: string;
-    remark: string;
-    status: boolean
-}
+import type { SalesManagerLead } from "@/schema/SalesManagerLeadSchema";
 
-export const DataLeads: LEADSDATATYPE[] = [
-    {
-        id: "1",
-        LeadType: "Instrumental",
-        InstrumentType: "New client",
-        customerName: "Rahul Sharma",
-        customerCompanyName: "GreenTech Industries",
-        customerContactNumber: "9876543210",
-        inquiryLocation: "north",
-        category: "ambient",
-        requirement: "Air Quality Monitoring System",
-        sourceOfLeadContact: "email",
-        salesManager: "Ankit Verma",
-        remark: "Requested urgent quotation",
-        status: true
-    },
-    {
-        id: "2",
-        LeadType: "Instrumental",
-        InstrumentType: "Existing client",
-        customerName: "Priya Mehta",
-        customerCompanyName: "AquaPure Solutions",
-        customerContactNumber: "9123456780",
-        inquiryLocation: "west",
-        category: "effluent",
-        requirement: "Effluent Treatment Plant",
-        sourceOfLeadContact: "inbound call",
-        salesManager: "Neha Kapoor",
-        remark: "Follow-up scheduled next week",
-        status: false
-    },
-    {
-        id: "3",
-        LeadType: "Instrumental",
-        InstrumentType: "New client",
-        customerName: "Amit Kumar",
-        customerCompanyName: "EcoSafe Pvt Ltd",
-        customerContactNumber: "9988776655",
-        inquiryLocation: "south",
-        category: "emission",
-        requirement: "Stack Emission Monitoring Device",
-        sourceOfLeadContact: "outbound call",
-        salesManager: "Ravi Singh",
-        remark: "Interested in annual maintenance as well",
-        status: true
-    },
-    {
-        id: "4",
-        LeadType: "Instrumental",
-        InstrumentType: "New client",
-        customerName: "Sneha Patel",
-        customerCompanyName: "BioCare Laboratories",
-        customerContactNumber: "9012345678",
-        inquiryLocation: "east",
-        category: "ambient",
-        requirement: "Dust Sampler Instrument",
-        sourceOfLeadContact: "email",
-        salesManager: "Karan Malhotra",
-        remark: "Asked for technical brochure",
-        status: false
-    }
-];
+import { SalesManagerLeadData } from "@/dummy-data/SalesManagerDummyLeadData";
 
-export const columns: ColumnDef<LEADSDATATYPE>[] = [
+
+
+export const columns: ColumnDef<SalesManagerLead>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -167,19 +94,19 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "LeadType",
+        accessorKey: "clientType",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Lead Type
+                    Client Type
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("LeadType")).toUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("clientType")).toUpperCase()}</div>,
     },
     {
         accessorKey: "InstrumentType",
@@ -302,19 +229,19 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
         cell: ({ row }) => <div className="uppercase">{String(row.getValue("sourceOfLeadContact")).toUpperCase()}</div>,
     },
     {
-        accessorKey: "salesManager",
+        accessorKey: "companyAddress",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Sales Manager
+                    Address
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="uppercase">{String(row.getValue("salesManager")).toUpperCase()}</div>,
+        cell: ({ row }) => <div className="uppercase">{String(row.getValue("companyAddress")).toUpperCase()}</div>,
     },
     {
         accessorKey: "remark",
@@ -347,6 +274,7 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const lead = row.original
+            const { } = lead;
 
 
             return (
@@ -360,22 +288,22 @@ export const columns: ColumnDef<LEADSDATATYPE>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(lead.id)}
+                            onClick={() => navigator.clipboard.writeText(lead.leadId)}
                         >
                             Copy Lead ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <Link to={`/dashboard/leads/view/${lead.id}`} className="w-full">View Lead</Link>
+                            <Link to={`/dashboard/leads/view/${lead.leadId}`} className="w-full">View Lead</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                            <Link to={`/dashboard/leads/update/${lead.id}`} className="w-full">Edit Lead</Link>
+                            <Link to={`/dashboard/leads/update/${lead.leadId}`} className="w-full">Edit Lead</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() => {
                                 // Set the lead to be deleted and open dialog
                                 // You might want to use state management for this
-                                document.dispatchEvent(new CustomEvent('openDeleteDialog', { detail: lead.id }));
+                                document.dispatchEvent(new CustomEvent('openDeleteDialog', { detail: lead.leadId }));
                             }}
                             className="text-red-600 focus:text-red-600"
                         >
@@ -421,7 +349,7 @@ export default function LeadsList() {
     }
 
     const table = useReactTable({
-        data: DataLeads,
+        data: SalesManagerLeadData,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,

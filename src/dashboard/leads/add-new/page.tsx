@@ -5,20 +5,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { BadgeAlert } from 'lucide-react';
-const NewLeadSchema = z.object({
-    LeadType: z.string().min(1, "Required"),
-    InstrumentType: z.string().min(1, "Required"),
-    customerName: z.string().min(1, "Required"),
-    customerCompanyName: z.string().min(1, "Required"),
-    customerContactNumber: z.string().optional(),
-    inquiryLocation: z.string().min(1, "Required"),
-    category: z.string().optional(),
-    requirement: z.string().min(1, "Required"),
-    sourceOfLeadContact: z.string().optional(),
-    salesManager: z.string().min(1, "Required"),
-    remark: z.string().optional(),
-    status: z.boolean(),
-});
+import { SalesManagerLeadSchema } from "@/schema/SalesManagerLeadSchema";
+
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
     Form,
@@ -56,12 +44,19 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
-import { DataLeads } from "../leads-list";
+// import { DataLeads } from "../leads-list";
+import { SalesManagerLeadData } from "@/dummy-data/SalesManagerDummyLeadData";
 export default function AddNewLeadPage() {
-    const form = useForm<z.infer<typeof NewLeadSchema>>({
-        resolver: zodResolver(NewLeadSchema),
+
+    const DataLeads = [{
+        sourceOfLeadContact: ["email", "inbound call", "outbound call"],
+        inquiryLocation: ["north", "south", "east", "west"],
+        salesManager: ["Rajesh Kumar", "Sanjay Verma", "Anita Desai", "Vikram Singh"]
+    }]
+    const form = useForm<z.infer<typeof SalesManagerLeadSchema>>({
+        resolver: zodResolver(SalesManagerLeadSchema),
         defaultValues: {
-            LeadType: "",
+            clientType: "",
             InstrumentType: "",
             customerName: "",
             customerCompanyName: "",
@@ -69,13 +64,13 @@ export default function AddNewLeadPage() {
             inquiryLocation: "",
             category: "",
             requirement: "",
-            sourceOfLeadContact: "",
-            salesManager: "",
+            sourceOfLead: "",
+            companyAddress: "",
             remark: "",
             status: true,
         },
     })
-    function onSubmit(values: z.infer<typeof NewLeadSchema>) {
+    function onSubmit(values: z.infer<typeof SalesManagerLeadSchema>) {
         console.log(values)
     }
     const [open, setOpen] = React.useState(false)
@@ -93,8 +88,8 @@ export default function AddNewLeadPage() {
         { id: 3, label: "Project", value: "project" },
     ];
     const ClientTypes: LEADTYPE[] = [
-        { id: 1, label: "New client", value: "new_client" },
-        { id: 2, label: "Existing client", value: "existing_client" },
+        { id: 1, label: "New client", value: "New client" },
+        { id: 2, label: "Existing client", value: "Existing client" },
     ];
 
 
@@ -103,21 +98,21 @@ export default function AddNewLeadPage() {
 
     function InstrumentChangeHand(value: string) {
         setSelectedInstrument(value);
-        if (value !== "existing_client") {
+        if (value !== "Existing client") {
             form.reset();
             setClientList([]);
             setValue("");
         }
         else {
-            setClientList(DataLeads.map((client) => ({
-                id: parseInt(client.id),
+            setClientList(SalesManagerLeadData.map((client) => ({
+                id: parseInt(client.leadId),
                 label: client.customerCompanyName,
                 value: client.customerCompanyName
             })));
         }
     }
     function handelClientSelect(value: string) {
-        DataLeads.forEach((client) => {
+        SalesManagerLeadData.forEach((client) => {
             if (client.customerCompanyName === value) {
                 form.setValue("customerName", client.customerName);
                 form.setValue("customerCompanyName", client.customerCompanyName);
@@ -125,7 +120,7 @@ export default function AddNewLeadPage() {
                 form.setValue("inquiryLocation", client.inquiryLocation);
                 form.setValue("category", client.category);
                 form.setValue("requirement", client.requirement);
-                form.setValue("sourceOfLeadContact", client.sourceOfLeadContact);
+                form.setValue("sourceOfLead", client.sourceOfLead);
                 form.setValue("salesManager", client.salesManager);
                 form.setValue("remark", client.remark);
                 form.setValue("status", client.status);
@@ -150,89 +145,7 @@ export default function AddNewLeadPage() {
                 <div className="flex flex-row w-full">
                     <p className="px-3 py-2.5 mb-8 bg-blue-50 rounded-lg text-blue-700 text-sm flex flex-row items-center gap-x-1  w-full"><BadgeAlert size="18px" /><span>Use the form below to add a new lead to the system. Please ensure all required fields are filled out accurately before submitting.</span></p>
                 </div>
-                {/* <div className="flex flex-wrap">
-                    <div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
-                        <Label className="text-slate-700 font-medium">Lead Type<span className="text-red-500">*</span></Label>
-                        <Select>
-                            <SelectTrigger className="w-full min-h-[40px]">
-                                <SelectValue placeholder="Select Lead Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {
-                                    leadTypes.map((leadType) => (
-                                        <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
-                                    ))
-                                }
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
-                        <Label className="text-slate-700 font-medium">Instrument Type<span className="text-red-500">*</span></Label>
-                        <Select onValueChange={(e) => InstrumentChangeHand(e)}>
-                            <SelectTrigger className="w-full min-h-[40px]">
-                                <SelectValue placeholder="Select Instrument Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {
-                                    ClientTypes.map((leadType) => (
-                                        <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
-                                    ))
-                                }
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {
-                        selectedInstrument === "existing_client" && (<div className="w-1/4 mb-4 flex flex-col px-2 gap-2">
-                            <Label className="text-slate-700 font-medium">Select Client<span className="text-red-500">*</span></Label>
-                            <Popover open={open} onOpenChange={setOpen} >
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        aria-expanded={open}
-                                        className="w-full justify-between font-normal h-[40px]"
-                                    >
-                                        {value
-                                            ? ClientList.find((client) => client.label === value)?.label
-                                            : "Select Client..."}
-                                        <ChevronsUpDown className="opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[200px] p-0">
-                                    <Command>
-                                        <CommandInput placeholder="Search Client..." className="h-9" />
-                                        <CommandList>
-                                            <CommandEmpty>No Client found.</CommandEmpty>
-                                            <CommandGroup>
-                                                {ClientList.map((framework) => (
-                                                    <CommandItem
-                                                        key={framework.id}
-                                                        value={framework.label}
-                                                        onSelect={(currentValue) => {
-                                                            setValue(currentValue === value ? "" : currentValue)
-                                                            setOpen(false)
-                                                            handelClientSelect(currentValue)
-                                                        }}
-                                                    >
-                                                        {framework.label}
-                                                        <Check
-                                                            className={cn(
-                                                                "ml-auto",
-                                                                value === framework.label ? "opacity-100" : "opacity-0"
-                                                            )}
-                                                        />
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                        </div>)
 
-                    }
-
-                </div> */}
 
                 {/* <Separator className="mt-3 mb-6" /> */}
                 <Form {...form}>
@@ -240,19 +153,26 @@ export default function AddNewLeadPage() {
                         <div className="flex flex-wrap w-full space-y-4 md:space-y-0 md:space-x-4 items-start">
                             <FormField
                                 control={form.control}
-                                name="LeadType"
+                                name="clientType"
                                 render={({ field }) => (
                                     <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                        <Label className="text-slate-700 font-medium">Lead Type<span className="text-red-500">*</span></Label>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Label className="text-slate-700 font-medium">Client Type<span className="text-red-500">*</span></Label>
+                                        <Select
+                                            onValueChange={(value) => {
+                                                field.onChange(value);
+                                                InstrumentChangeHand(value);
+                                            }}
+                                            defaultValue={field.value}
+                                            value={field.value}
+                                        >
                                             <FormControl>
                                                 <SelectTrigger className="w-full min-h-[40px]">
-                                                    <SelectValue placeholder="Select Lead Type" />
+                                                    <SelectValue placeholder="Select Client Type" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {
-                                                    leadTypes.map((leadType) => (
+                                                    ClientTypes.map((leadType) => (
                                                         <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
                                                     ))
                                                 }
@@ -268,12 +188,12 @@ export default function AddNewLeadPage() {
                                 render={({ field }) => (
                                     <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
                                         <Label className="text-slate-700 font-medium">Instrument Type<span className="text-red-500">*</span></Label>
-                                        <Select onValueChange={(value) => {
-                                            field.onChange(value);
-                                            InstrumentChangeHand(value);
-                                        }}
+                                        <Select
+
+                                            onValueChange={field.onChange}
                                             defaultValue={field.value}
-                                            value={field.value}>
+
+                                        >
                                             <FormControl>
                                                 <SelectTrigger className="w-full min-h-[40px]">
                                                     <SelectValue placeholder="Select Instrument Type" />
@@ -281,7 +201,7 @@ export default function AddNewLeadPage() {
                                             </FormControl>
                                             <SelectContent>
                                                 {
-                                                    ClientTypes.map((leadType) => (
+                                                    leadTypes.map((leadType) => (
                                                         <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
                                                     ))
                                                 }
@@ -292,7 +212,7 @@ export default function AddNewLeadPage() {
                                 )}
                             />
                             {
-                                selectedInstrument === "existing_client" && (<div className="w-full md:w-1/2 lg:w-1/4 flex flex-col px-2 gap-2">
+                                selectedInstrument === "Existing client" && (<div className="w-full md:w-1/2 lg:w-1/4 flex flex-col px-2 gap-2">
                                     <Label className="text-slate-700 font-medium">Select Client<span className="text-red-500">*</span></Label>
                                     <Popover open={open} onOpenChange={setOpen} >
                                         <PopoverTrigger asChild>
@@ -402,7 +322,9 @@ export default function AddNewLeadPage() {
                                                     )}
                                                 >
                                                     {field.value
-                                                        ? DataLeads.find((location) => location.inquiryLocation === field.value)?.inquiryLocation
+                                                        ? DataLeads[0].inquiryLocation.includes(field.value)
+                                                            ? field.value
+                                                            : "Select Inquiry Location"
                                                         : "Select Inquiry Location"}
                                                     <ChevronsUpDown className="opacity-50" />
                                                 </Button>
@@ -417,20 +339,20 @@ export default function AddNewLeadPage() {
                                                 <CommandList>
                                                     <CommandEmpty>No Location found.</CommandEmpty>
                                                     <CommandGroup>
-                                                        {DataLeads.map((language) => (
+                                                        {DataLeads[0].inquiryLocation.map((location) => (
                                                             <CommandItem
                                                                 className="capitalize"
-                                                                value={language.inquiryLocation}
-                                                                key={language.id}
+                                                                value={location}
+                                                                key={location}
                                                                 onSelect={() => {
-                                                                    form.setValue("inquiryLocation", language.inquiryLocation)
+                                                                    form.setValue("inquiryLocation", location)
                                                                 }}
                                                             >
-                                                                {language.inquiryLocation}
+                                                                {location}
                                                                 <Check
                                                                     className={cn(
                                                                         "ml-auto",
-                                                                        language.inquiryLocation === field.value
+                                                                        location === field.value
                                                                             ? "opacity-100"
                                                                             : "opacity-0"
                                                                     )}
@@ -476,7 +398,7 @@ export default function AddNewLeadPage() {
 
                         <FormField
                             control={form.control}
-                            name="sourceOfLeadContact"
+                            name="sourceOfLead"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Source Of Lead</FormLabel>
@@ -492,9 +414,9 @@ export default function AddNewLeadPage() {
                                                     )}
                                                 >
                                                     {field.value
-                                                        ? DataLeads.find(
-                                                            (language) => language.sourceOfLeadContact === field.value
-                                                        )?.sourceOfLeadContact
+                                                        ? DataLeads[0].sourceOfLeadContact.includes(field.value)
+                                                            ? field.value
+                                                            : "Select Source Of Lead"
                                                         : "Select Source Of Lead"}
                                                     <ChevronsUpDown className="opacity-50" />
                                                 </Button>
@@ -509,26 +431,26 @@ export default function AddNewLeadPage() {
                                                 <CommandList>
                                                     <CommandEmpty>No Source of lead found.</CommandEmpty>
                                                     <CommandGroup>
-                                                        {DataLeads.map((language) => (
+                                                        {DataLeads[0].sourceOfLeadContact.map((manager) => (
                                                             <CommandItem
-                                                                className="capitalize"
-                                                                value={language.sourceOfLeadContact}
-                                                                key={language.id}
+                                                                value={manager}
+                                                                key={manager}
                                                                 onSelect={() => {
-                                                                    form.setValue("sourceOfLeadContact", language.sourceOfLeadContact)
+                                                                    form.setValue("sourceOfLead", manager)
                                                                 }}
                                                             >
-                                                                {language.sourceOfLeadContact}
+                                                                {manager}
                                                                 <Check
                                                                     className={cn(
                                                                         "ml-auto",
-                                                                        language.sourceOfLeadContact === field.value
+                                                                        manager === field.value
                                                                             ? "opacity-100"
                                                                             : "opacity-0"
                                                                     )}
                                                                 />
                                                             </CommandItem>
                                                         ))}
+
                                                     </CommandGroup>
                                                 </CommandList>
                                             </Command>
@@ -540,63 +462,13 @@ export default function AddNewLeadPage() {
                         />
                         <FormField
                             control={form.control}
-                            name="salesManager"
+                            name="companyAddress"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
-                                    <FormLabel className="text-slate-700 font-medium">Sales Manager</FormLabel>
-                                    <Popover >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    className={cn(
-                                                        "w-full h-[40px] justify-between font-normal",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value
-                                                        ? DataLeads.find(
-                                                            (language) => language.salesManager === field.value
-                                                        )?.salesManager
-                                                        : "Select Sales Manager"}
-                                                    <ChevronsUpDown className="opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[200px] p-0">
-                                            <Command>
-                                                <CommandInput
-                                                    placeholder="Search framework..."
-                                                    className="h-9"
-                                                />
-                                                <CommandList>
-                                                    <CommandEmpty>No framework found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        {DataLeads.map((language) => (
-                                                            <CommandItem
-                                                                value={language.salesManager}
-                                                                key={language.id}
-                                                                onSelect={() => {
-                                                                    form.setValue("salesManager", language.salesManager)
-                                                                }}
-                                                            >
-                                                                {language.salesManager}
-                                                                <Check
-                                                                    className={cn(
-                                                                        "ml-auto",
-                                                                        language.salesManager === field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                    )}
-                                                                />
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
+                                    <FormLabel className="text-slate-700 font-medium">Address</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter Address" className=" h-[40px]" {...field} />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

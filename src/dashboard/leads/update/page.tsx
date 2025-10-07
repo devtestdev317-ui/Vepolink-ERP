@@ -6,21 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { BadgeAlert } from 'lucide-react';
 
-import { DataLeads } from "../leads-list";
-const NewLeadSchema = z.object({
-    LeadType: z.string().min(1, "Required"),
-    InstrumentType: z.string().min(1, "Required"),
-    customerName: z.string().min(1, "Required"),
-    customerCompanyName: z.string().min(1, "Required"),
-    customerContactNumber: z.string().optional(),
-    inquiryLocation: z.string().min(1, "Required"),
-    category: z.string().optional(),
-    requirement: z.string().min(1, "Required"),
-    sourceOfLeadContact: z.string().optional(),
-    salesManager: z.string().min(1, "Required"),
-    remark: z.string().optional(),
-    status: z.boolean(),
-});
+import { SalesManagerLeadData } from "../../../dummy-data/SalesManagerDummyLeadData"
+import { SalesManagerLeadSchema } from "../../../schema/SalesManagerLeadSchema"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
     Form,
@@ -60,25 +47,36 @@ import { Label } from "@/components/ui/label";
 
 export default function UpdateLeadPage() {
     const { id } = useParams<{ id: string }>();
-    const lead = DataLeads.find(lead => lead.id === id);
-    const form = useForm<z.infer<typeof NewLeadSchema>>({
-        resolver: zodResolver(NewLeadSchema),
+    const lead = SalesManagerLeadData.find(lead => lead.leadId === id);
+
+
+    const DataLeads = [{
+        sourceOfLeadContact: ["email", "inbound call", "outbound call"],
+        inquiryLocation: ["north", "south", "east", "west"],
+        salesManager: ["Rajesh Kumar", "Sanjay Verma", "Anita Desai", "Vikram Singh"]
+    }]
+    const form = useForm<z.infer<typeof SalesManagerLeadSchema>>({
+        resolver: zodResolver(SalesManagerLeadSchema),
         defaultValues: {
-            LeadType: lead?.LeadType || "",
+            clientType: lead?.clientType || "",
             InstrumentType: lead?.InstrumentType || "",
             customerName: lead?.customerName || "",
             customerCompanyName: lead?.customerCompanyName || "",
             customerContactNumber: lead?.customerContactNumber || "",
             inquiryLocation: lead?.inquiryLocation || "",
             category: lead?.category || "",
+            enquiryStatus: lead?.enquiryStatus,
             requirement: lead?.requirement || "",
-            sourceOfLeadContact: lead?.sourceOfLeadContact || "",
+            inspectionStatus: lead?.inspectionStatus,
+            sourceOfLead: lead?.sourceOfLead || "",
             salesManager: lead?.salesManager || "",
+            technicalFieldEngineer: lead?.technicalFieldEngineer,
             remark: lead?.remark || "",
-            status: lead?.status || true,
+            siteVisit: lead?.siteVisit,
+            status: lead?.status || false,
         },
     })
-    function onSubmit(values: z.infer<typeof NewLeadSchema>) {
+    function onSubmit(values: z.infer<typeof SalesManagerLeadSchema>) {
         console.log(values)
     }
     const [open, setOpen] = React.useState(false)
@@ -91,21 +89,21 @@ export default function UpdateLeadPage() {
         value: string;
     }
     const leadTypes: LEADTYPE[] = [
-        { id: 1, label: "Instrumental", value: "Instrumental" },
-        { id: 2, label: "Chemical", value: "Chemical" },
-        { id: 3, label: "Project", value: "Project" },
+        { id: 1, label: "Instrumental", value: "instrumental" },
+        { id: 2, label: "Chemical", value: "chemical" },
+        { id: 3, label: "Project", value: "project" },
     ];
     const ClientTypes: LEADTYPE[] = [
         { id: 1, label: "New client", value: "New client" },
         { id: 2, label: "Existing client", value: "Existing client" },
     ];
+    const sourceOfLeadContact = ["email", "inbound call", "outbound call"]
 
 
-    const [selectedInstrument, setSelectedInstrument] = React.useState<string | null>(lead?.InstrumentType || null);
+    const [selectedInstrument, setSelectedInstrument] = React.useState<string | null>(null);
     const [ClientList, setClientList] = React.useState<LEADTYPE[]>([]);
 
     function InstrumentChangeHand(value: string) {
-        console.log("value", value);
         setSelectedInstrument(value);
         if (value !== "Existing client") {
             form.reset();
@@ -113,20 +111,15 @@ export default function UpdateLeadPage() {
             setValue("");
         }
         else {
-            setClientList(DataLeads.map((client) => ({
-                id: parseInt(client.id),
+            setClientList(SalesManagerLeadData.map((client) => ({
+                id: parseInt(client.leadId),
                 label: client.customerCompanyName,
                 value: client.customerCompanyName
             })));
         }
     }
-    React.useEffect(() => {
-        if (lead?.InstrumentType) {
-            InstrumentChangeHand(lead.InstrumentType);
-        }
-    }, [lead]);
     function handelClientSelect(value: string) {
-        DataLeads.forEach((client) => {
+        SalesManagerLeadData.forEach((client) => {
             if (client.customerCompanyName === value) {
                 form.setValue("customerName", client.customerName);
                 form.setValue("customerCompanyName", client.customerCompanyName);
@@ -134,22 +127,27 @@ export default function UpdateLeadPage() {
                 form.setValue("inquiryLocation", client.inquiryLocation);
                 form.setValue("category", client.category);
                 form.setValue("requirement", client.requirement);
-                form.setValue("sourceOfLeadContact", client.sourceOfLeadContact);
+                form.setValue("sourceOfLead", client.sourceOfLead);
                 form.setValue("salesManager", client.salesManager);
                 form.setValue("remark", client.remark);
                 form.setValue("status", client.status);
+                form.setValue("siteVisit", client.inspectionStatus)
+                form.setValue("enquiryStatus", client.enquiryStatus)
+                form.setValue("inspectionStatus", client.enquiryStatus)
             }
         });
         form.clearErrors();
     }
+    const [callStatus, SetCallStatus] = React.useState(lead?.enquiryStatus);
+    const [ServiceStatus, SetServiceStatus] = React.useState(lead?.siteVisit)
     return (
         <div className="w-full p-7">
-            <DashboardStrip title="Pre-sales/Leads: Add New" />
+            <DashboardStrip title="Pre-sales/Leads: Update Lead" />
 
             <Card className="p-7 rounded-xl border border-slate-200/60 dark:border-slate-700/60 mt-4 gap-4">
                 <div className="flex items-center justify-between">
                     <h4 data-slot="card-title" className="leading-none flex items-center gap-3 text-slate-800">
-                        <div className="p-2 bg-blue-50 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pen-line w-5 h-5 text-blue-600" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"></path></svg></div>Add New Lead</h4>
+                        <div className="p-2 bg-blue-50 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pen-line w-5 h-5 text-blue-600" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"></path></svg></div>Update Lead</h4>
                     <Link to="/dashboard/leads" className={buttonVariants({
                         variant: "ghost",
                         className: "text-sm font-normal bg-slate-300/50 hover:bg-slate-400"
@@ -166,19 +164,19 @@ export default function UpdateLeadPage() {
                         <div className="flex flex-wrap w-full   items-start">
                             <FormField
                                 control={form.control}
-                                name="LeadType"
+                                name="clientType"
                                 render={({ field }) => (
                                     <FormItem className="w-1/4 px-2">
-                                        <Label className="text-slate-700 font-medium">Lead Type<span className="text-red-500">*</span></Label>
+                                        <Label className="text-slate-700 font-medium">Client Type<span className="text-red-500">*</span></Label>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger className="w-full min-h-[40px]">
-                                                    <SelectValue placeholder="Select Lead Type" />
+                                                    <SelectValue placeholder="Select Client Type" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {
-                                                    leadTypes.map((leadType) => (
+                                                    ClientTypes.map((leadType) => (
                                                         <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
                                                     ))
                                                 }
@@ -206,7 +204,7 @@ export default function UpdateLeadPage() {
                                             </FormControl>
                                             <SelectContent>
                                                 {
-                                                    ClientTypes.map((leadType) => (
+                                                    leadTypes.map((leadType) => (
                                                         <SelectItem key={leadType.id} value={leadType.value}>{leadType.label}</SelectItem>
                                                     ))
                                                 }
@@ -313,7 +311,7 @@ export default function UpdateLeadPage() {
                             control={form.control}
                             name="inquiryLocation"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col w-1/4 px-2">
+                                <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Inquiry Location <span className="text-red-500">*</span></FormLabel>
                                     <Popover >
                                         <PopoverTrigger asChild>
@@ -327,7 +325,9 @@ export default function UpdateLeadPage() {
                                                     )}
                                                 >
                                                     {field.value
-                                                        ? DataLeads.find((location) => location.inquiryLocation === field.value)?.inquiryLocation
+                                                        ? DataLeads[0].inquiryLocation.includes(field.value)
+                                                            ? field.value
+                                                            : "Select Inquiry Location"
                                                         : "Select Inquiry Location"}
                                                     <ChevronsUpDown className="opacity-50" />
                                                 </Button>
@@ -342,20 +342,20 @@ export default function UpdateLeadPage() {
                                                 <CommandList>
                                                     <CommandEmpty>No Location found.</CommandEmpty>
                                                     <CommandGroup>
-                                                        {DataLeads.map((language) => (
+                                                        {DataLeads[0].inquiryLocation.map((location) => (
                                                             <CommandItem
                                                                 className="capitalize"
-                                                                value={language.inquiryLocation}
-                                                                key={language.id}
+                                                                value={location}
+                                                                key={location}
                                                                 onSelect={() => {
-                                                                    form.setValue("inquiryLocation", language.inquiryLocation)
+                                                                    form.setValue("inquiryLocation", location)
                                                                 }}
                                                             >
-                                                                {language.inquiryLocation}
+                                                                {location}
                                                                 <Check
                                                                     className={cn(
                                                                         "ml-auto",
-                                                                        language.inquiryLocation === field.value
+                                                                        location === field.value
                                                                             ? "opacity-100"
                                                                             : "opacity-0"
                                                                     )}
@@ -401,10 +401,154 @@ export default function UpdateLeadPage() {
 
                         <FormField
                             control={form.control}
-                            name="sourceOfLeadContact"
+                            name="sourceOfLead"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col w-1/4 px-2">
                                     <FormLabel className="text-slate-700 font-medium">Source Of Lead</FormLabel>
+                                    <Select onValueChange={(value) => {
+                                        field.onChange(value);
+                                        InstrumentChangeHand(value);
+                                    }}
+                                        defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className="w-full min-h-[40px]">
+                                                <SelectValue placeholder="Select Instrument Type" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {
+                                                sourceOfLeadContact.map((leadType) => (
+                                                    <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                ))
+                                            }
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="enquiryStatus"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col w-1/4 px-2">
+                                    <FormLabel className="text-slate-700 font-medium">Enquiry Status</FormLabel>
+                                    <Select onValueChange={(value) => { field.onChange(value); SetCallStatus(value); }} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className="w-full min-h-[40px]">
+                                                <SelectValue placeholder="Select Call Status" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {
+                                                ["Call Done", "Call Pending"].map((leadType) => (
+                                                    <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                ))
+                                            }
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {/* callStatus, SetCallStatus */}
+                        {
+                            callStatus === "Call Done" ? (
+                                <FormField
+                                    control={form.control}
+                                    name="siteVisit"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                            <Label className="text-slate-700 font-medium">Site Visit</Label>
+                                            <Select
+                                                onValueChange={(value) => { field.onChange(value); SetServiceStatus(value); }} defaultValue={field.value}
+
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full min-h-[40px]">
+                                                        <SelectValue placeholder="Select Inspection status" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {
+                                                        ["Yes", "No"].map((leadType) => (
+                                                            <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                        ))
+                                                    }
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            ) : null
+                        }
+
+                        {
+                            ServiceStatus == "Yes" ? (<FormField
+                                control={form.control}
+                                name="salesManager"
+                                render={({ field }) => (
+                                    <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                        <Label className="text-slate-700 font-medium">Service Manager</Label>
+                                        <Select
+
+                                            onValueChange={(value) => { field.onChange(value); }} defaultValue={field.value}
+
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="w-full min-h-[40px]">
+                                                    <SelectValue placeholder="Select Service Manager" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {
+                                                    ["Rajesh Kumar", "Sanjay Verma", "Anita Desai", "Vikram Singh"].map((leadType) => (
+                                                        <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />) : callStatus === "Call Done" && ServiceStatus === "No" ? (
+                                <>
+                                    <FormField
+                                        control={form.control}
+                                        name="quoteAmount"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                                <FormLabel className="text-slate-700 font-medium">Quote Amount</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Enter Quote Amount" className=" h-[40px]" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="quoteAttached"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                                <FormLabel className="text-slate-700 font-medium">Upload Quote</FormLabel>
+                                                <FormControl>
+                                                    <Input type="file" placeholder="Select Quote" accept=".pdf" className=" h-[40px]" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </>
+                            ) : null
+                        }
+                        <FormField
+                            control={form.control}
+                            name="technicalFieldEngineer"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
+                                    <FormLabel className="text-slate-700 font-medium">Technical Field Engineer <span className="text-red-500">*</span></FormLabel>
                                     <Popover >
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -417,10 +561,10 @@ export default function UpdateLeadPage() {
                                                     )}
                                                 >
                                                     {field.value
-                                                        ? DataLeads.find(
-                                                            (language) => language.sourceOfLeadContact === field.value
-                                                        )?.sourceOfLeadContact
-                                                        : "Select Source Of Lead"}
+                                                        ? ["Anil Thakur", "Manoj Singh", "Ranjan Gupta", "Neha Singh"].includes(field.value)
+                                                            ? field.value
+                                                            : "Select Engineer"
+                                                        : "Select Engineer"}
                                                     <ChevronsUpDown className="opacity-50" />
                                                 </Button>
                                             </FormControl>
@@ -428,26 +572,26 @@ export default function UpdateLeadPage() {
                                         <PopoverContent className="w-[200px] p-0">
                                             <Command>
                                                 <CommandInput
-                                                    placeholder="Search Location..."
+                                                    placeholder="Search Engineer..."
                                                     className="h-9"
                                                 />
                                                 <CommandList>
-                                                    <CommandEmpty>No Source of lead found.</CommandEmpty>
+                                                    <CommandEmpty>No Location found.</CommandEmpty>
                                                     <CommandGroup>
-                                                        {DataLeads.map((language) => (
+                                                        {["Anil Thakur", "Manoj Singh", "Ranjan Gupta", "Neha Singh"].map((location) => (
                                                             <CommandItem
                                                                 className="capitalize"
-                                                                value={language.sourceOfLeadContact}
-                                                                key={language.id}
+                                                                value={location}
+                                                                key={location}
                                                                 onSelect={() => {
-                                                                    form.setValue("sourceOfLeadContact", language.sourceOfLeadContact)
+                                                                    form.setValue("technicalFieldEngineer", location)
                                                                 }}
                                                             >
-                                                                {language.sourceOfLeadContact}
+                                                                {location}
                                                                 <Check
                                                                     className={cn(
                                                                         "ml-auto",
-                                                                        language.sourceOfLeadContact === field.value
+                                                                        location === field.value
                                                                             ? "opacity-100"
                                                                             : "opacity-0"
                                                                     )}
@@ -465,68 +609,91 @@ export default function UpdateLeadPage() {
                         />
                         <FormField
                             control={form.control}
-                            name="salesManager"
+                            name="inspectionStatus"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col w-1/4 px-2">
-                                    <FormLabel className="text-slate-700 font-medium">Sales Manager</FormLabel>
-                                    <Popover >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    className={cn(
-                                                        "w-full h-[40px] justify-between font-normal",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value
-                                                        ? DataLeads.find(
-                                                            (language) => language.salesManager === field.value
-                                                        )?.salesManager
-                                                        : "Select Sales Manager"}
-                                                    <ChevronsUpDown className="opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[200px] p-0">
-                                            <Command>
-                                                <CommandInput
-                                                    placeholder="Search framework..."
-                                                    className="h-9"
-                                                />
-                                                <CommandList>
-                                                    <CommandEmpty>No framework found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        {DataLeads.map((language) => (
-                                                            <CommandItem
-                                                                value={language.salesManager}
-                                                                key={language.id}
-                                                                onSelect={() => {
-                                                                    form.setValue("salesManager", language.salesManager)
-                                                                }}
-                                                            >
-                                                                {language.salesManager}
-                                                                <Check
-                                                                    className={cn(
-                                                                        "ml-auto",
-                                                                        language.salesManager === field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                    )}
-                                                                />
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                    <Label className="text-slate-700 font-medium">Inspection status</Label>
+                                    <Select
+
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-full min-h-[40px]">
+                                                <SelectValue placeholder="Select Inspection status" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {
+                                                ["Pending", "Done"].map((leadType) => (
+                                                    <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                ))
+                                            }
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
+                        {
+                            ServiceStatus === "Yes" ? (
+                                <> <FormField
+                                    control={form.control}
+                                    name="quoteAmount"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                            <FormLabel className="text-slate-700 font-medium">Quote Amount</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter Quote Amount" className=" h-[40px]" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                    <FormField
+                                        control={form.control}
+                                        name="quoteAttached"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                                <FormLabel className="text-slate-700 font-medium">Upload Quote</FormLabel>
+                                                <FormControl>
+                                                    <Input type="file" placeholder="Select Quote" accept=".pdf" className=" h-[40px]" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    /></>
+                            ) : null
+                        }
+
+                        <FormField
+                            control={form.control}
+                            name="attachedPO"
+                            render={({ field }) => (
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                    <FormLabel className="text-slate-700 font-medium">Attached PO</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" placeholder="Select PO" accept=".pdf" className=" h-[40px]" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="attachedPI"
+                            render={({ field }) => (
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                    <FormLabel className="text-slate-700 font-medium">Attached PI</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" placeholder="Select PI" accept=".pdf" className=" h-[40px]" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="remark"
@@ -544,6 +711,7 @@ export default function UpdateLeadPage() {
                                 </FormItem>
                             )}
                         />
+
                         <div className="w-full flex flex-col items-end justify-end">
                             <Button type="submit" className="cursor-pointer">Update</Button>
 
@@ -551,6 +719,6 @@ export default function UpdateLeadPage() {
                     </form>
                 </Form>
             </Card>
-        </div>
+        </div >
     );
 }

@@ -76,6 +76,13 @@ export default function DashboardPage() {
                     icon: <Eye size={"18px"}
                         className="ml-0" />
                 },
+                {
+                    id: '4',
+                    title: 'Quote Approvel',
+                    href: '/dashboard/leads/approvel',
+                    icon: <Eye size={"18px"}
+                        className="ml-0" />
+                },
 
             ]
         },
@@ -154,66 +161,11 @@ export default function DashboardPage() {
             subnavItems: [
                 {
                     id: "1",
-                    title: "Service Dashboard",
-                    href: "/service/dashboard",
+                    title: "Inspection List",
+                    href: "leads/inspection",
                     icon: <Eye size={"18px"} className="ml-0" />
                 },
-                {
-                    id: "2",
-                    title: "Ticket Status",
-                    href: "/service/tickets",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "3",
-                    title: "Create Ticket",
-                    href: "/service/create-ticket",
-                    disabled: true,
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "4",
-                    title: "Knowledge Base",
-                    href: "/service/knowledge-base",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "5",
-                    title: "Live Chat",
-                    href: "/service/live-chat",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "6",
-                    title: "Service History",
-                    href: "/service/history",
-                    icon: <Eye size={"18px"} className="ml-0" />,
-                    disabled: true
-                },
-                {
-                    id: "7",
-                    title: "SLA Status",
-                    href: "/service/sla",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "8",
-                    title: "Resources",
-                    href: "/service/resources",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "9",
-                    title: "System Status",
-                    href: "/service/status",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                },
-                {
-                    id: "10",
-                    title: "Contact Support",
-                    href: "/service/contact",
-                    icon: <Eye size={"18px"} className="ml-0" />
-                }
+
             ]
         },
         {
