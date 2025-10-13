@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RequisitionForm } from '@/components/requisition-form';
 import { RequisitionTable } from '@/components/requisition-table';
-import type { ManpowerRequisition, ApprovalStatus } from '@/types/recruitment';
+import type { ManpowerRequisition } from '@/types/recruitment';
 import { Plus, Download, Upload } from 'lucide-react';
 import { DashboardStrip } from '@/components/custom/DashboardStrip';
 

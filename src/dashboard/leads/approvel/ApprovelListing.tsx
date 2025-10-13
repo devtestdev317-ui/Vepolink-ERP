@@ -45,10 +45,6 @@ import {
     DialogTitle
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import {
-    FieldSet
-} from "@/components/ui/field"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -59,12 +55,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     return itemRank.passed
 };
 
-interface FRAMEWORKS {
-    value: string,
-    label: string,
-    name: string,
-    email: string
-}
+
 
 interface UploadedFile {
     id: string;
@@ -76,32 +67,7 @@ interface UploadedFile {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ApproversForm } from "@/components/custom/ApprovalList"
 export default function QuoteApprovelPage() {
-    const frameworks: FRAMEWORKS[] = [
-        {
-            value: "director",
-            label: "Director",
-            name: "Abhnav",
-            email: "abhnav@vepolink.in"
-        },
-        {
-            value: "CEO",
-            label: "CEO",
-            name: "Abhi",
-            email: "abhi@vepolink.in"
-        },
-        {
-            value: "voice president",
-            label: "Voice President",
-            name: "Arvind",
-            email: "arvind@vepolink.in"
-        },
-        {
-            value: "sales manager",
-            label: "Sales Manager",
-            name: "Abhinav",
-            email: "abhinav@vepolink.in"
-        }
-    ]
+    
 
     const [modelOpen, setModelOpen] = React.useState(false);
     const [uploadedFiles, setUploadedFiles] = React.useState<UploadedFile[]>([]);
@@ -199,7 +165,6 @@ export default function QuoteApprovelPage() {
         },
     })
 
-    const [selectedFrameworks, setSelectedFrameworks] = React.useState<string[]>([]);
 
     // Calculate page numbers to display
     const currentPage = table.getState().pagination.pageIndex + 1;
@@ -584,8 +549,5 @@ export default function QuoteApprovelPage() {
             </Dialog>
         </div>
     )
-}
-interface MultiSelectDropdownProps {
-    frameworks: FRAMEWORKS[];
 }
 

@@ -10,12 +10,10 @@ import RouteError from './components/RouteError.tsx';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
 import { store } from './App/store.ts';
 import { Provider } from "react-redux"
-import LeadsList from './dashboard/leads/leads-list.tsx';
 import AddNewLeadPage from './dashboard/leads/add-new/page.tsx';
 import ViewLeadDetailPage from './dashboard/leads/view/page.tsx';
 import { Toaster } from "@/components/ui/sonner";
 import UpdateLeadPage from './dashboard/leads/update/page.tsx';
-import SalesManagerLeadsPage from './dashboard/sales-manager/page.tsx';
 import ListLeadsPage from './dashboard/list-leads/page.tsx';
 import InspectionListPage from './dashboard/leads/Inspection-List/page.tsx';
 import QuoteApprovelPage from './dashboard/leads/approvel/ApprovelListing.tsx';

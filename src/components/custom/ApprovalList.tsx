@@ -1,7 +1,7 @@
 // components/approvers-form.tsx
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { X, UserRoundPlus } from 'lucide-react';
