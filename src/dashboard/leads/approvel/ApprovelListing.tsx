@@ -61,7 +61,9 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
 interface FRAMEWORKS {
     value: string,
-    label: string
+    label: string,
+    name: string,
+    email: string
 }
 
 interface UploadedFile {
@@ -72,23 +74,32 @@ interface UploadedFile {
 }
 
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { ApproversForm } from "@/components/custom/ApprovalList"
 export default function QuoteApprovelPage() {
     const frameworks: FRAMEWORKS[] = [
         {
             value: "director",
             label: "Director",
+            name: "Abhnav",
+            email: "abhnav@vepolink.in"
         },
         {
             value: "CEO",
             label: "CEO",
+            name: "Abhi",
+            email: "abhi@vepolink.in"
         },
         {
             value: "voice president",
             label: "Voice President",
+            name: "Arvind",
+            email: "arvind@vepolink.in"
         },
         {
             value: "sales manager",
             label: "Sales Manager",
+            name: "Abhinav",
+            email: "abhinav@vepolink.in"
         }
     ]
 
@@ -259,7 +270,7 @@ export default function QuoteApprovelPage() {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
-
+  
     return (
         <div className="w-full p-7">
             <DashboardStrip title="Request for Approvel" />
@@ -404,7 +415,7 @@ export default function QuoteApprovelPage() {
                     <ScrollArea className="max-h-[360px] mr-[-10px] pr-[10px]">
 
                         <DialogDescription>
-                            <div className="flex flex-wrap gap-x-2">
+                            <div className="flex flex-wrap gap-x-2 px-1.5">
                                 {
                                     actTab === null ?
                                         <>
@@ -430,34 +441,8 @@ export default function QuoteApprovelPage() {
 
                                                 <div className="flex flex-col space-y-2.5">
                                                     <Label >Approvers</Label>
-                                                    <FieldSet className="">
-                                                        <div className="flex flex-wrap gap-0">
-                                                            {
-                                                                frameworks.map((item) => (
-                                                                    <div key={item.value} className="w-full md:w-1/2 p-1">
-                                                                        <div className="flex items-center space-x-2">
-                                                                            <Label htmlFor={item.value} className={`relative p-2 py-3 border rounded w-full font-normal ${selectedFrameworks.includes(item.value) ? "bg-[#584ccc] border-[#584ccc] text-white" : ""}`}>
-                                                                                <Checkbox
-                                                                                    id={item.value}
-                                                                                    checked={selectedFrameworks.includes(item.value)}
-                                                                                    onCheckedChange={(checked) => {
-                                                                                        if (checked) {
-                                                                                            setSelectedFrameworks(prev => [...prev, item.value]);
-                                                                                        } else {
-                                                                                            setSelectedFrameworks(prev => prev.filter(framework => framework !== item.value));
-                                                                                        }
-                                                                                    }}
-                                                                                    className="absolute right-2 "
-                                                                                />
-                                                                                {item.label}
-                                                                            </Label>
-                                                                        </div>
-                                                                    </div>
-                                                                ))
-                                                            }
-                                                        </div>
-
-                                                    </FieldSet>
+                                                    {/* <TeamMeberApprovalList frameworks={frameworks} /> */}
+                                                    <ApproversForm />
                                                 </div>
                                                 <div className="flex flex-col space-y-2.5">
                                                     <Label >Remarks</Label>
@@ -600,3 +585,7 @@ export default function QuoteApprovelPage() {
         </div>
     )
 }
+interface MultiSelectDropdownProps {
+    frameworks: FRAMEWORKS[];
+}
+

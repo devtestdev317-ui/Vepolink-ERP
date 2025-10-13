@@ -459,7 +459,7 @@ export default function UpdateLeadPage() {
                                     name="siteVisit"
                                     render={({ field }) => (
                                         <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                            <Label className="text-slate-700 font-medium">Site Visit</Label>
+                                            <Label className="text-slate-700 font-medium">Pre Site Visit</Label>
                                             <Select
                                                 onValueChange={(value) => { field.onChange(value); SetServiceStatus(value); }} defaultValue={field.value}
 
@@ -485,44 +485,125 @@ export default function UpdateLeadPage() {
                         }
 
                         {
-                            ServiceStatus == "Yes" ? (<FormField
-                                control={form.control}
-                                name="salesManager"
-                                render={({ field }) => (
-                                    <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                        <Label className="text-slate-700 font-medium">Service Manager</Label>
-                                        <Select
-
-                                            onValueChange={(value) => { field.onChange(value); }} defaultValue={field.value}
-
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="w-full min-h-[40px]">
-                                                    <SelectValue placeholder="Select Service Manager" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {
-                                                    ["Rajesh Kumar", "Sanjay Verma", "Anita Desai", "Vikram Singh"].map((leadType) => (
-                                                        <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
-                                                    ))
-                                                }
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />) : callStatus === "Call Done" && ServiceStatus === "No" ? (
+                            ServiceStatus == "Yes" ?
                                 <>
                                     <FormField
                                         control={form.control}
-                                        name="quoteAmount"
+                                        name="salesManager"
                                         render={({ field }) => (
                                             <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                                <FormLabel className="text-slate-700 font-medium">Quote Amount</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Enter Quote Amount" className=" h-[40px]" {...field} />
-                                                </FormControl>
+                                                <Label className="text-slate-700 font-medium">Service Manager</Label>
+                                                <Select
+
+                                                    onValueChange={(value) => { field.onChange(value); }} defaultValue={field.value}
+
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="w-full min-h-[40px]">
+                                                            <SelectValue placeholder="Select Service Manager" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {
+                                                            ["Rajesh Kumar", "Sanjay Verma", "Anita Desai", "Vikram Singh"].map((leadType) => (
+                                                                <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                            ))
+                                                        }
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="technicalFieldEngineer"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
+                                                <FormLabel className="text-slate-700 font-medium">Technical Field Engineer <span className="text-red-500">*</span></FormLabel>
+                                                <Popover >
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button
+                                                                variant="outline"
+                                                                role="combobox"
+                                                                className={cn(
+                                                                    "w-full h-[40px] justify-between font-normal capitalize",
+                                                                    !field.value && "text-muted-foreground"
+                                                                )}
+                                                            >
+                                                                {field.value
+                                                                    ? ["Anil Thakur", "Manoj Singh", "Ranjan Gupta", "Neha Singh"].includes(field.value)
+                                                                        ? field.value
+                                                                        : "Select Engineer"
+                                                                    : "Select Engineer"}
+                                                                <ChevronsUpDown className="opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-[200px] p-0">
+                                                        <Command>
+                                                            <CommandInput
+                                                                placeholder="Search Engineer..."
+                                                                className="h-9"
+                                                            />
+                                                            <CommandList>
+                                                                <CommandEmpty>No Location found.</CommandEmpty>
+                                                                <CommandGroup>
+                                                                    {["Anil Thakur", "Manoj Singh", "Ranjan Gupta", "Neha Singh"].map((location) => (
+                                                                        <CommandItem
+                                                                            className="capitalize"
+                                                                            value={location}
+                                                                            key={location}
+                                                                            onSelect={() => {
+                                                                                form.setValue("technicalFieldEngineer", location)
+                                                                            }}
+                                                                        >
+                                                                            {location}
+                                                                            <Check
+                                                                                className={cn(
+                                                                                    "ml-auto",
+                                                                                    location === field.value
+                                                                                        ? "opacity-100"
+                                                                                        : "opacity-0"
+                                                                                )}
+                                                                            />
+                                                                        </CommandItem>
+                                                                    ))}
+                                                                </CommandGroup>
+                                                            </CommandList>
+                                                        </Command>
+                                                    </PopoverContent>
+                                                </Popover>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="inspectionStatus"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                                <Label className="text-slate-700 font-medium">Pre Site Visit status</Label>
+                                                <Select
+
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="w-full min-h-[40px]">
+                                                            <SelectValue placeholder="Select Inspection status" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {
+                                                            ["Pending", "Done"].map((leadType) => (
+                                                                <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
+                                                            ))
+                                                        }
+                                                    </SelectContent>
+                                                </Select>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -532,142 +613,44 @@ export default function UpdateLeadPage() {
                                         name="quoteAttached"
                                         render={({ field }) => (
                                             <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                                <FormLabel className="text-slate-700 font-medium">Upload Quote</FormLabel>
+                                                <FormLabel className="text-slate-700 font-medium">Upload Pre site Visit Doc.</FormLabel>
                                                 <FormControl>
-                                                    <Input type="file" placeholder="Select Quote" accept=".pdf" className=" h-[40px]" {...field} />
+                                                    <Input type="file" placeholder="Upload Pre site Visit Doc" accept=".pdf" className=" h-[40px]" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
                                 </>
-                            ) : null
+
+                                : null
                         }
                         <FormField
                             control={form.control}
-                            name="technicalFieldEngineer"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col w-full md:w-1/2 lg:w-1/4 px-2">
-                                    <FormLabel className="text-slate-700 font-medium">Technical Field Engineer <span className="text-red-500">*</span></FormLabel>
-                                    <Popover >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    className={cn(
-                                                        "w-full h-[40px] justify-between font-normal capitalize",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value
-                                                        ? ["Anil Thakur", "Manoj Singh", "Ranjan Gupta", "Neha Singh"].includes(field.value)
-                                                            ? field.value
-                                                            : "Select Engineer"
-                                                        : "Select Engineer"}
-                                                    <ChevronsUpDown className="opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[200px] p-0">
-                                            <Command>
-                                                <CommandInput
-                                                    placeholder="Search Engineer..."
-                                                    className="h-9"
-                                                />
-                                                <CommandList>
-                                                    <CommandEmpty>No Location found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        {["Anil Thakur", "Manoj Singh", "Ranjan Gupta", "Neha Singh"].map((location) => (
-                                                            <CommandItem
-                                                                className="capitalize"
-                                                                value={location}
-                                                                key={location}
-                                                                onSelect={() => {
-                                                                    form.setValue("technicalFieldEngineer", location)
-                                                                }}
-                                                            >
-                                                                {location}
-                                                                <Check
-                                                                    className={cn(
-                                                                        "ml-auto",
-                                                                        location === field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                    )}
-                                                                />
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="inspectionStatus"
+                            name="quoteAmount"
                             render={({ field }) => (
                                 <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                    <Label className="text-slate-700 font-medium">Inspection status</Label>
-                                    <Select
-
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger className="w-full min-h-[40px]">
-                                                <SelectValue placeholder="Select Inspection status" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {
-                                                ["Pending", "Done"].map((leadType) => (
-                                                    <SelectItem key={leadType} value={leadType}>{leadType}</SelectItem>
-                                                ))
-                                            }
-                                        </SelectContent>
-                                    </Select>
+                                    <FormLabel className="text-slate-700 font-medium">Quote Amount</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter Quote Amount" className=" h-[40px]" {...field} />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-
-                        {
-                            ServiceStatus === "Yes" ? (
-                                <> <FormField
-                                    control={form.control}
-                                    name="quoteAmount"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                            <FormLabel className="text-slate-700 font-medium">Quote Amount</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Enter Quote Amount" className=" h-[40px]" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                    <FormField
-                                        control={form.control}
-                                        name="quoteAttached"
-                                        render={({ field }) => (
-                                            <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
-                                                <FormLabel className="text-slate-700 font-medium">Upload Quote</FormLabel>
-                                                <FormControl>
-                                                    <Input type="file" placeholder="Select Quote" accept=".pdf" className=" h-[40px]" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    /></>
-                            ) : null
-                        }
-
+                        <FormField
+                            control={form.control}
+                            name="quoteAttached"
+                            render={({ field }) => (
+                                <FormItem className="w-full md:w-1/2 lg:w-1/4 px-2">
+                                    <FormLabel className="text-slate-700 font-medium">Upload Quote</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" placeholder="Select Quote" accept=".pdf" className=" h-[40px]" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="attachedPO"

@@ -144,7 +144,7 @@ const getAvatarClass = (status: APPROVEDSTATUS["status"]) => {
     switch (status) {
         case "Approved": return "bg-green-100 text-green-800 border border-green-500";
         case "Reject": return "bg-red-100 text-red-800 border border-red-700";
-        default: return "bg-yellow-100 text-yellow-800 border border-yellow-500";
+        default: return "bg-red-100 text-red-800 border border-red-700";
     }
 };
 

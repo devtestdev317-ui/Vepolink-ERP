@@ -70,16 +70,16 @@ export default function DashboardPage() {
                         className="ml-0" />
                 },
                 {
-                    id: '3',
-                    title: 'Sales Manager Leads',
-                    href: '/dashboard/sales-manager/leads',
+                    id: '4',
+                    title: 'Doc Approvel',
+                    href: '/dashboard/leads/approvel',
                     icon: <Eye size={"18px"}
                         className="ml-0" />
                 },
                 {
                     id: '4',
-                    title: 'Quote Approvel',
-                    href: '/dashboard/leads/approvel',
+                    title: 'Recived Approvel',
+                    href: '/dashboard/leads/approvel/list/',
                     icon: <Eye size={"18px"}
                         className="ml-0" />
                 },
@@ -203,14 +203,15 @@ export default function DashboardPage() {
             title: 'HR Department',
             description: 'Get a quick overview of your dashboard.',
             subnavItems: [
-                { id: '1', title: 'Overview', href: '/dashboard/overview', icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '2', title: 'Analytics', href: '/dashboard/analytics', icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '3', title: 'Reports', href: '/dashboard/reports', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '4', title: 'Price', href: '/dashboard/price', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '5', title: 'Comparisons', href: '/dashboard/comparisons', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '6', title: 'Case Studies', href: '/dashboard/case-studies', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '7', title: 'Events', href: '/dashboard/events', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
-                { id: '8', title: 'Contact Sales', href: '/dashboard/contact-sales', disabled: true, icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '1', title: 'Recruitment', href: 'human-resources/add-requisition/', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '2', title: 'Employee Management', href: 'human-resources/employee-management/', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '3', title: 'Attendance', href: 'attendance', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '4', title: 'Payroll & Compliance', href: '/dashboard/reports', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '5', title: 'Performance Management', href: '/dashboard/price', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '6', title: 'Training & Development', href: '/dashboard/comparisons', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '7', title: 'Policy', href: '/dashboard/case-studies', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '8', title: 'Welfare', href: '/dashboard/events', icon: <Eye size={"18px"} className="ml-0" /> },
+                { id: '9', title: 'Exit Management', href: '/dashboard/contact-sales', icon: <Eye size={"18px"} className="ml-0" /> },
             ]
         },
         {

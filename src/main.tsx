@@ -20,6 +20,11 @@ import ListLeadsPage from './dashboard/list-leads/page.tsx';
 import InspectionListPage from './dashboard/leads/Inspection-List/page.tsx';
 import QuoteApprovelPage from './dashboard/leads/approvel/ApprovelListing.tsx';
 import ApprovelList from './dashboard/leads/approvel/list/page.tsx';
+import MasterPage from './master-page/page.tsx';
+import MasterLayout from './layout/Master-layout.tsx';
+import RecruitmentPage from './dashboard/human-resources/add-requirement/page.tsx';
+import EmployeeManagementPage from './dashboard/human-resources/add-requirement/employees/page.tsx';
+import AttendancePage from './dashboard/human-resources/add-requirement/attendance/page.tsx';
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -33,6 +38,17 @@ const Routes = createBrowserRouter([
     ]
   },
   {
+    path: "/master",
+    element: <MasterLayout />,
+    errorElement: <RouteError />,
+    children: [
+      {
+        index: true,
+        element: <MasterPage />,
+      },
+    ]
+  },
+  {
     path: "/dashboard",
     element: <DashboardLayout />,
     errorElement: <RouteError />,
@@ -41,13 +57,14 @@ const Routes = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
+
       {
         path: "lead",
         element: <ListLeadsPage />,
       },
       {
         path: "leads",
-        element: <LeadsList />,
+        element: <InspectionListPage />,
       },
       {
         path: "leads/view/:id",
@@ -65,10 +82,10 @@ const Routes = createBrowserRouter([
         path: "leads/inspection",
         element: <InspectionListPage />,
       },
-      {
-        path: "sales-manager/leads",
-        element: <SalesManagerLeadsPage />,
-      },
+      // {
+      //   path: "sales-manager/leads",
+      //   element: <SalesManagerLeadsPage />,
+      // },
 
       // Approvel
       {
@@ -76,9 +93,23 @@ const Routes = createBrowserRouter([
         element: <QuoteApprovelPage />,
       },
       {
-        path: "leads/approvel/list/:id",
+        path: "leads/approvel/list/",
         element: <ApprovelList />,
-      }
+      },
+      // HR
+      {
+        path: "human-resources/add-requisition/",
+        element: <RecruitmentPage />
+      },
+      {
+        path: "human-resources/employee-management/",
+        element: <EmployeeManagementPage />
+      },
+      // Attendenc
+      {
+        path: "attendance/",
+        element: <AttendancePage />
+      },
     ],
   },
 ])
